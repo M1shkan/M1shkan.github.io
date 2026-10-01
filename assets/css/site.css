@@ -609,7 +609,7 @@ img[data-zoom]{cursor:zoom-in}
 .ul-scarfrun{position:absolute;left:0;right:0;bottom:0;height:clamp(64px,6.4vw,92px);overflow:hidden;border-top:3px solid #fff}
 .ul-scarfrun > div{display:flex;width:max-content;height:100%}
 .ul-scarfrun img{height:100%;width:auto;flex:none}
-@media (prefers-reduced-motion:no-preference){.ul-scarfrun > div{animation:ulrun2 50s linear infinite}@keyframes ulrun2{to{transform:translateX(-50%)}}}
+@media (prefers-reduced-motion:no-preference){.ul-scarfrun > div{animation:ulrun2 100s linear infinite}@keyframes ulrun2{to{transform:translateX(-50%)}}}
 @media (hover:hover) and (pointer:fine){.p-ulitki:hover .uk1{transform:rotate(-10deg) translate(-6%,-3%)}.p-ulitki:hover .uk2{transform:rotate(10deg) translate(6%,-3%)}.p-ulitki:hover .ul-19{transform:rotate(4deg) scale(1.08)}}
 @media (max-width:900px){.page.p-ulitki{grid-template-columns:1fr}.p-ulitki .txt{padding-bottom:0}.ul-stage{min-height:clamp(260px,74vw,360px)}.ul-stage .uk{height:calc(100% - 96px);bottom:clamp(74px,18vw,90px)}.ul-stage .uk1{left:4%}.ul-stage .uk2{left:50%}.ul-19{left:auto;right:2%;top:0}}
 

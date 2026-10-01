@@ -926,7 +926,7 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .ul-track img{display:block;height:clamp(84px,10vw,150px);width:auto;flex:none;box-shadow:0 14px 30px -14px rgba(13,31,115,.5)}
 .ul-track img[data-zoom]{cursor:zoom-in}
 @media (prefers-reduced-motion:no-preference){
-  .ul-track{animation:ulrun 60s linear infinite}
+  .ul-track{animation:ulrun 140s linear infinite}
   .ul-run.rev .ul-track{animation-direction:reverse}
   .ul-run:hover .ul-track{animation-play-state:paused}
   @keyframes ulrun{to{transform:translateX(-50%)}}
