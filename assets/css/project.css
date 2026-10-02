@@ -1139,3 +1139,8 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
   .bl{min-height:0;font-size:11px;hyphens:auto}
   .iri-sol .sol-pros + .sub{margin-top:28px}
 }
+.bts.bts5{grid-template-columns:repeat(6,minmax(0,1fr))}
+.bts.bts5 figure:nth-child(-n+2){grid-column:span 3}
+.bts.bts5 figure:nth-child(n+3){grid-column:span 2}
+.bts img[data-zoom]{cursor:zoom-in}
+@media (max-width:860px){.bts.bts5{grid-template-columns:1fr 1fr}.bts.bts5 figure:nth-child(n){grid-column:span 1}.bts.bts5 figure:last-child{grid-column:1 / -1}}
