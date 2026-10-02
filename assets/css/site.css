@@ -682,3 +682,11 @@ img[data-zoom]{cursor:zoom-in}
 .iri-stage .ic img{display:block;width:100%;height:auto}
 @media (hover:hover) and (pointer:fine){.p-iri:hover .il{transform:rotate(0) translateY(-6px)}.p-iri:hover .ic{transform:rotate(-2deg) scale(1.06)}}
 @media (max-width:900px){.page.p-iri{grid-template-columns:1fr}.p-iri h3{padding-right:58px;font-size:min(8vw,40px)}.iri-stage .il{width:94%}.iri-stage .ic{top:4%;width:36%}.p-iri::before{inset:45% 0 0 0}.iri-stage{min-height:clamp(220px,62vw,340px);margin-top:12px}}
+
+/* Кнопка «назад» в шапке на страницах проектов */
+.nav-l{display:flex;align-items:center;gap:10px;min-width:0}
+.nav-back{width:38px;height:38px;padding:0;justify-content:center;flex:none;transition:background-color 250ms ease,color 250ms ease,transform 300ms var(--ease)}
+.nav-back svg{width:18px;height:18px}
+@media (hover:hover){.nav-back:hover{background:var(--text);color:var(--canvas)}.nav-back:hover svg{transform:translateX(-2px)}}
+.nav-back svg{transition:transform 300ms var(--ease)}
+@media (max-width:420px){.nav-l .logo span{display:none}}
