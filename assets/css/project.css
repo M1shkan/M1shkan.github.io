@@ -939,3 +939,16 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .t-ul .ul-h{font-family:"Russo One",var(--f-crush);font-weight:400;margin:0}
 .t-ul .sub h3.ul-h{line-height:1}
 @media (max-width:860px){.t-plat .proj-hero::before{top:auto;bottom:0;height:46%;right:8px;width:110px;-webkit-mask:linear-gradient(transparent,#000 60%);mask:linear-gradient(transparent,#000 60%);opacity:.35}}
+
+/* Лента постов на телефоне: карточки не прячутся за анимацией, лента с отступами и счётчиком */
+@media (max-width:860px){
+  .wear,.phones{scroll-padding-inline:clamp(16px,3.5vw,48px);overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .wear figure{flex:0 0 78%}
+  .phone{flex:0 0 58%}
+  .js .wear .rv,.js .phones .rv{opacity:1;transform:none;transition:none}
+  .wear img,.phones img{cursor:zoom-in}
+  .sw-dots{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:14px}
+  .sw-dots i{width:7px;height:7px;border-radius:50%;background:var(--slot);transition:width 300ms var(--ease),background-color 300ms ease}
+  .sw-dots i.on{width:22px;border-radius:4px;background:var(--head)}
+}
+@media (min-width:861px){.sw-dots{display:none}}
