@@ -662,3 +662,20 @@ img[data-zoom]{cursor:zoom-in}
   .head p,.sk p{margin-top:-.42em}
 }
 @media (max-width:900px){.head{gap:18px}.sk{gap:14px}}
+
+/* плитка MAXLAW для ИРИ: белый лист презентации, лаймовые и серые диагонали */
+.page.p-iri{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;min-height:clamp(380px,32vw,480px);background:#fff;color:#111;border-color:#111;isolation:isolate}
+.p-iri::before{content:"";position:absolute;z-index:-1;inset:0 0 0 38%;background:linear-gradient(118deg,transparent 0 22%,#d0f053 22% 34%,transparent 34% 42%,#747473 42% 52%,transparent 52% 60%,#d0f053 60% 67%,transparent 67%)}
+.p-iri .txt{display:grid;gap:14px;justify-items:start;align-self:start}
+.p-iri h3{font-family:"Unbounded",var(--f-crush);font-weight:800;font-size:clamp(30px,3.4vw,54px);line-height:1;max-width:none;color:#111}
+.p-iri h3 span{background:#d0f053;padding:0 .14em;margin-left:-.14em;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.p-iri p{color:#3a3a39;max-width:40ch}
+.p-iri .no{color:#111;background:#fff}
+.p-iri .pill{color:#111;border-color:#111}
+@media (hover:hover){.p-iri .pill:hover{background:#111;color:#d0f053}}
+.iri-stage{position:relative;min-height:clamp(260px,24vw,360px)}
+.iri-stage .il{position:absolute;left:2%;bottom:0;width:82%;height:auto;filter:drop-shadow(0 24px 28px rgba(0,0,0,.3));transform:rotate(-3deg);transition:transform 700ms var(--ease)}
+.iri-stage .ic{position:absolute;right:2%;top:24%;width:30%;padding:6% 5%;background:#111;border-radius:14px;transform:rotate(6deg);box-shadow:0 14px 24px -12px rgba(0,0,0,.5);transition:transform 600ms var(--pop)}
+.iri-stage .ic img{display:block;width:100%;height:auto}
+@media (hover:hover) and (pointer:fine){.p-iri:hover .il{transform:rotate(0) translateY(-6px)}.p-iri:hover .ic{transform:rotate(-2deg) scale(1.06)}}
+@media (max-width:900px){.page.p-iri{grid-template-columns:1fr}.p-iri h3{padding-right:58px;font-size:min(8vw,40px)}.iri-stage .il{width:94%}.iri-stage .ic{top:4%;width:36%}.p-iri::before{inset:45% 0 0 0}.iri-stage{min-height:clamp(220px,62vw,340px);margin-top:12px}}

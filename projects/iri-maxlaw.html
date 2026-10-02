@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MAXLAW для ИРИ — Михаил Гришин</title>
+<meta name="description" content="Командный проект для Института развития интернета: исследование претензионной работы и сервис MAXLAW с ИИ, который принимает, сортирует и разбирает досудебные претензии.">
+<meta property="og:title" content="MAXLAW для ИРИ — Михаил Гришин">
+<meta property="og:description" content="Сервис с ИИ для автоматизации претензионной работы.">
+<meta property="og:url" content="https://m1shkan.github.io/projects/iri-maxlaw.html">
+<link rel="canonical" href="https://m1shkan.github.io/projects/iri-maxlaw.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:image" content="https://m1shkan.github.io/assets/img/og/iri-maxlaw.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="../assets/img/favicon.svg?v=2" type="image/svg+xml">
+<link rel="icon" href="../assets/img/favicon-light.png?v=2" type="image/png" media="(prefers-color-scheme: light)">
+<link rel="icon" href="../assets/img/favicon-dark.png?v=2" type="image/png" media="(prefers-color-scheme: dark)">
+<link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png">
+<meta name="theme-color" content="#d0f053">
+<script>
+  document.documentElement.classList.add("js");
+  try { var t = localStorage.getItem("theme"); if (t === "light" || t === "dark") document.documentElement.dataset.theme = t; } catch (e) {}
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@900&family=Geologica:wght@400..700&family=PT+Serif:ital@1&family=Press+Start+2P&family=Unbounded:wght@700;800&display=swap">
+<link rel="stylesheet" href="../assets/css/site.css">
+<link rel="stylesheet" href="../assets/css/project.css">
+</head>
+<body class="t-iri" data-base="../">
+<a class="skip" href="#main">Перейти к содержанию</a>
+<header class="nav">
+  <div class="wrap">
+    <a class="logo" href="../index.html"><b aria-hidden="true">МГ</b><span>Михаил Гришин</span></a>
+    <nav aria-label="Разделы"><ul class="pills">
+      <li><a class="pill" href="../index.html#about">Обо мне</a></li>
+      <li><a class="pill" href="../index.html#album">Проекты</a></li>
+      <li><a class="pill" href="../index.html#feed">Лента</a></li>
+    </ul></nav>
+    <div class="right">
+      <button class="pill round" id="themeBtn" type="button" aria-label="Сменить тему"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 4a8 8 0 0 1 0 16Z" fill="currentColor"/></svg></button>
+      <a class="pill pill--fill" href="https://t.me/needreid" target="_blank" rel="noopener">Написать</a>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="proj-hero" aria-labelledby="h1">
+    <div class="wrap">
+      <div class="txt">
+        <a class="pill back" href="../index.html#album">← В альбом</a>
+        <p class="kick">Проект 06 · Сервис · UX/UI · 2025</p>
+        <div class="iri-sheet">
+          <h1 id="h1" class="iri-h"><span class="iri-band">Автоматизация претензионной работы</span></h1>
+        </div>
+        <p class="sum">Командный проект для Института развития интернета. Мы разобрались, как компании работают с досудебными претензиями, и придумали MAXLAW — сервис с ИИ, который принимает, сортирует и разбирает претензии. На мне разработка и визуализация сервиса.</p>
+      </div>
+      <div class="art iri-art" aria-label="Наклейки проекта">
+        <span class="st iri-lap" data-drag style="--r:-4deg;--k:0"><img src="../assets/img/iri/lap-maxlaw.webp" width="1600" height="1054" alt="Кабинет сервиса MAXLAW на ноутбуке: список претензий, статусы, риски и текст документа"></span>
+        <span class="st iri-logo" data-drag style="--r:6deg;--k:1"><span class="iri-chip dark"><img src="../assets/img/iri/maxlaw-light.webp" width="941" height="525" alt="Логотип MAXLAW"></span></span>
+        <span class="st iri-org" data-drag style="--r:-7deg;--k:2"><span class="iri-chip"><img src="../assets/img/iri/iri-dark.webp" width="634" height="265" alt="Логотип ИРИ — Институт развития интернета"></span></span>
+      </div>
+      <div class="meta-row"><div><b>Год</b><span>2025</span></div><div><b>Роль</b><span>Разработчик и дизайнер: сервис MAXLAW и ИИ</span></div><div><b>Команда</b><span>5 человек</span></div><div><b>Для кого</b><span>ИРИ — Институт развития интернета</span></div></div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <section class="chap" aria-labelledby="c1">
+      <div class="chap-h"><span class="no">Раскатка</span><h2 id="c1" class="iri-h">Задача</h2></div>
+      <div class="chap-b">
+        <p class="lead rv">Цифровизировать юридическую функцию: сделать сервис, который снимет с юриста рутину претензионной работы.</p>
+        <p class="rv">Сейчас у претензионной работы в большинстве компаний нет чёткой структуры подачи, сортировки и отслеживания. Теряется история обращений, из-за отсутствия понятного алгоритма случаются ошибки. Это бьёт по авторитету компании и ухудшает связь с клиентами.</p>
+        <ul class="iri-tags rv" aria-label="Что должен уметь сервис">
+          <li>Подача досудебных претензий</li><li>Оформление</li><li>Отслеживание</li><li>Автоматическая правовая консультация</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="chap" aria-labelledby="c2">
+      <div class="chap-h"><span class="no">Первый период</span><h2 id="c2" class="iri-h">Как думали</h2></div>
+      <div class="chap-b">
+        <p class="lead rv">Сначала исследование, потом сервис. Каждый шаг опирался на предыдущий.</p>
+        <ol class="iri-steps rv">
+          <li><b>Мнение экспертов</b>Интервью и опрос</li>
+          <li><b>Законы</b>Материальное и процессуальное право</li>
+          <li><b>Статистика</b>Каналы подачи и проблемы претензий</li>
+          <li><b>Продукт на предмете ИРИ</b>Как сервис встанет в работу института</li>
+          <li><b>Проблематика</b>Где теряются время и деньги</li>
+          <li class="hl"><b>Сервис</b>Оптимизация и цифровизация претензионной работы</li>
+          <li class="hl"><b>ИИ</b>Внедрение нейросети в претензионный процесс</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="iri-qa" id="expert" aria-labelledby="qa-h">
+      <div class="sub"><h3 id="qa-h" class="rv iri-h"><small>Исследование</small>Вопросы эксперту</h3><p class="rv" style="--d:1">Мы задали эксперту шесть вопросов. Выберите вопрос, чтобы прочитать ответ.</p></div>
+      <div class="qa rv">
+        <div class="qa-list" role="tablist" aria-label="Вопросы эксперту">
+          <button type="button" role="tab" aria-selected="true" aria-controls="qa1" id="qt1">Каков «жизненный цикл» претензии?</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="qa2" id="qt2" tabindex="-1">Какие бывают претензии?</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="qa3" id="qt3" tabindex="-1">Какая нагрузка на юриста?</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="qa4" id="qt4" tabindex="-1">Насколько всё автоматизировано?</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="qa5" id="qt5" tabindex="-1">Что сложного в работе с ИИ?</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="qa6" id="qt6" tabindex="-1">Связаны ли договоры и претензии?</button>
+        </div>
+        <div class="qa-sheet">
+          <span class="qa-k">Ответ эксперта</span>
+          <div role="tabpanel" id="qa1" aria-labelledby="qt1"><p><b>Жизненный цикл:</b> претензию направляют через личный кабинет, ЭДО или почту, на рассмотрение есть 15 рабочих дней, ответ даётся письменно.</p><p>Претензионная работа — сквозной процесс, который объединяет несколько подразделений. Ошибки в нём могут привлечь внимание регуляторов и попасть в СМИ.</p></div>
+          <div role="tabpanel" id="qa2" aria-labelledby="qt2" hidden><p>Претензии делятся по <b>субъекту</b> и по <b>сфере</b>.</p><p>В основном они приходят от клиентов компании и её контрагентов: для претензии нужно правовое основание. Предмет претензии зависит прежде всего от сферы деятельности компании.</p></div>
+          <div role="tabpanel" id="qa3" aria-labelledby="qt3" hidden><p>Нагрузка на одного юриста уникальна для каждой компании, её нельзя усреднить по рынку.</p><p>Но внутри одной компании и её команды юристов среднюю нагрузку <b>можно посчитать</b> и автоматизировать трудозатраты.</p></div>
+          <div role="tabpanel" id="qa4" aria-labelledby="qt4" hidden><p><b>Сервисы есть, но</b> их почти не используют: они дорогие. Обычно вся цифровизация сводится к тому, что претензии хранятся и обрабатываются в одном месте.</p><p>Автоматизация недостаточна и фрагментирована. При этом претензионный блок — один из самых удачных для автоматизации: большую часть документов можно шаблонизировать.</p></div>
+          <div role="tabpanel" id="qa5" aria-labelledby="qt5" hidden><p><b>Правовые сложности:</b> ИИ может выдавать ложную, неполную или противоречивую информацию. <b>Организационные:</b> сотрудники сопротивляются нововведениям и не умеют работать с ИИ.</p><p>Ключевая проблема — юрист, который не проверяет выводы ИИ и формирует некорректные документы.</p></div>
+          <div role="tabpanel" id="qa6" aria-labelledby="qt6" hidden><p>Должны быть <b>связаны, но на практике не связаны</b>: на договорном и судебном блоке работают разные юристы.</p><p>Условия договоров стоило бы пересматривать с учётом претензий, которые приходят в компанию. Но это уже вопрос хорошего менеджмента.</p></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="pband iri-stat" aria-labelledby="st-h">
+    <div class="wrap">
+      <div class="sub" style="padding-top:0"><h3 id="st-h" class="iri-h"><small>Статистика</small>Как подают претензии</h3><p>Больше половины претензий приходит через электронные формы на сайтах. Поэтому путь претензии в сервисе начинается со встроенной формы на сайте.</p></div>
+      <ol class="bars rv" aria-label="Каналы подачи претензий">
+        <li style="--v:51.4"><span class="bv">51,4%</span><span class="bl">Электронные формы на сайтах компаний</span></li>
+        <li style="--v:29.6"><span class="bv">29,6%</span><span class="bl">Телефонные звонки и горячие линии</span></li>
+        <li style="--v:13.7"><span class="bv">13,7%</span><span class="bl">Посещение офисов лично</span></li>
+        <li style="--v:5.3"><span class="bv">5,3%</span><span class="bl">Соцсети и публичные площадки</span></li>
+      </ol>
+      <div class="sub"><h3 class="iri-h"><small>Проблематика</small>Где болит</h3><p>Четыре главные проблемы претензионной работы по статистике.</p></div>
+      <ol class="pains">
+        <li><b>01</b>Загруженность юристов рутинной работой</li>
+        <li><b>02</b>Времязатратный операционный цикл</li>
+        <li><b>03</b>Человеческий фактор и риск ошибок</li>
+        <li><b>04</b>Сложность управления и анализа</li>
+      </ol>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sub"><h3 class="rv iri-h"><small>Опыт крупных компаний</small>Как это решают другие</h3><p class="rv" style="--d:1">Мы посмотрели, как с претензиями работают большие компании, и взяли лучшее в сервис.</p></div>
+    <div class="cases">
+      <article class="case rv">
+        <h4>Т-Банк</h4>
+        <p>Собственная методика оценки претензий и рисков. Дело получает категорию <b class="s">S</b>, <b class="m">M</b> или <b class="l">L</b>, и в зависимости от неё им занимается бэк-офис или руководитель направления.</p>
+        <p class="case-n"><b>+28%</b>к эффективности работы</p>
+      </article>
+      <article class="case rv" style="--d:1">
+        <h4>Сибур</h4>
+        <p>К претензионной работе подключили шесть роботов. Они оформляют и направляют все претензии после экспертизы и автоматически составляют уведомления об удержании штрафов.</p>
+        <p class="case-n"><b>30%</b>актов о нарушении разбирают без юриста</p>
+      </article>
+      <article class="case rv" style="--d:2">
+        <h4>Аэрофлот</h4>
+        <p>Два сектора — юристы и не юристы. Сотрудник не из юротдела проводит служебный анализ, юрист готовит проект решения, а утверждает его претензионная комиссия.</p>
+        <p class="case-n"><b>3</b>этапа до решения</p>
+      </article>
+    </div>
+  </div>
+
+  <section class="pband iri-sol" id="maxlaw" aria-labelledby="sol-h">
+    <div class="wrap">
+      <div class="sol-top">
+        <img class="sol-logo" src="../assets/img/iri/maxlaw-light.webp" width="941" height="525" alt="Логотип MAXLAW">
+        <div class="sub" style="padding:0"><h3 id="sol-h" class="iri-h"><small>Второй период · Что сделал</small>Сервис MAXLAW</h3><p>Сервис с ИИ-алгоритмом, который решает любую претензию. На мне разработка и визуализация сервиса. Нажимайте на шаги, чтобы увидеть экран.</p></div>
+      </div>
+      <div class="flow">
+        <ol class="flow-steps" role="tablist" aria-label="Путь претензии">
+          <li><button type="button" role="tab" aria-selected="true" data-scr="form"><b>1</b>Клиент заполняет встроенную форму на сайте и отправляет претензию</button></li>
+          <li><button type="button" role="tab" aria-selected="false" data-scr="cab" tabindex="-1"><b>2</b>ИИ анализирует претензию: срочность, риски, прогноз и варианты решения</button></li>
+          <li><button type="button" role="tab" aria-selected="false" data-scr="cab" tabindex="-1"><b>3</b>Сотрудник просматривает заявку и берёт её в работу</button></li>
+          <li><button type="button" role="tab" aria-selected="false" data-scr="cab" tabindex="-1"><b>4</b>Клиенту на почту приходят логин и пароль от личного кабинета в сервисе</button></li>
+          <li><button type="button" role="tab" aria-selected="false" data-scr="cab" tabindex="-1"><b>5</b>Решение выносится в сервисе, заявителю приходит уведомление, претензия уходит в архив</button></li>
+        </ol>
+        <div class="flow-lap" aria-live="polite">
+          <img class="on" data-scr="form" src="../assets/img/iri/lap-form.webp" width="1600" height="1054" alt="Форма подачи претензии на сайте ИРИ" loading="lazy" data-zoom="lap">
+          <img data-scr="cab" src="../assets/img/iri/lap-maxlaw.webp" width="1600" height="1054" alt="Кабинет MAXLAW: претензии со статусами, рисками и рекомендациями, текст документа с подсветкой" loading="lazy" data-zoom="lap">
+        </div>
+      </div>
+      <ul class="sol-pros">
+        <li><b>Оптимизация</b>процесса работы с досудебными претензиями</li>
+        <li><b>Систематизация и сортировка</b>входящих и исходящих претензий</li>
+        <li><b>Структурирование</b>каждого частного претензионного случая</li>
+        <li><b>Меньше ошибок</b>за счёт минимизации человеческого фактора</li>
+        <li><b>История обращений</b>по каждому случаю, без потери данных и времени</li>
+      </ul>
+      <div class="sub" style="padding-bottom:clamp(18px,2vw,28px)"><h3 class="iri-h"><small>Устройство</small>Из чего состоит</h3><p>Три части, которые работают вместе.</p></div>
+      <ul class="arch">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><ellipse cx="12" cy="5.5" rx="8" ry="3"/><path d="M4 5.5v13c0 1.7 3.6 3 8 3s8-1.3 8-3v-13M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></svg><b>База данных</b>Российский сервер, защищённый асимметричным шифрованием</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 10 3 2.5L7 15M12 15h5"/></svg><b>Программа</b>Сервис связи клиента и компании</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3.5"/></svg><b>Нейросеть</b>Отечественный ИИ, который работает на основе базы данных</li>
+      </ul>
+      <div class="gg sol-shots">
+        <figure class="s6"><img src="../assets/img/iri/s25.webp" width="1600" height="900" alt="Слайд: претензия через форму на сайте попадает в базу данных сервиса" loading="lazy" data-zoom="sol" data-i="0"></figure>
+        <figure class="s6"><img src="../assets/img/iri/s26.webp" width="1600" height="900" alt="Слайд: претензия сортируется по признакам, ИИ анализирует срочность и риски" loading="lazy" data-zoom="sol" data-i="1"></figure>
+        <figure class="s6"><img src="../assets/img/iri/s27.webp" width="1600" height="900" alt="Слайд: статусы важности, сроки принятия решения и уведомления на телефоне" loading="lazy" data-zoom="sol" data-i="2"></figure>
+        <figure class="s6"><img src="../assets/img/iri/s28.webp" width="1600" height="900" alt="Слайд: решение по претензии, уведомление через сервис и архив" loading="lazy" data-zoom="sol" data-i="3"></figure>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="sub"><h3 class="rv iri-h"><small>Финансы</small>Сколько стоит</h3><p class="rv" style="--d:1">Финансовый расчёт команды для сервиса на отечественном ИИ.</p></div>
+    <dl class="fin rv">
+      <div><dt>Бюджет ИРИ в 2025 году</dt><dd>25,4 <small>млрд ₽</small></dd></div>
+      <div><dt>Итоговая стоимость проекта</dt><dd>≈ 72 <small>млн ₽</small></dd></div>
+      <div><dt>Срок реализации</dt><dd>≈ 1 <small>год</small></dd></div>
+    </dl>
+
+    <div class="sub"><h3 class="rv iri-h"><small>Команда</small>Кто что делал</h3><p class="rv" style="--d:1">Пять человек, у каждого своя часть.</p></div>
+    <ul class="team">
+      <li class="rv"><b>Максим Зюзя</b><i>Аналитик, тимлид</i>Сбор источников, анализ мнения экспертов, аналитика проблематики</li>
+      <li class="rv me" style="--d:1"><b>Михаил Гришин</b><i>Разработчик, дизайнер</i>Разработка и визуализация сервиса MAXLAW и ИИ</li>
+      <li class="rv" style="--d:2"><b>Людмила Кузьмина</b><i>Правовой аналитик</i>Аналитика статистики по претензионной работе, разработка нейросети</li>
+      <li class="rv"><b>Таисия Зайцева</b><i>Правовой аналитик</i>Разработка опроса, анализ мнения экспертов, интерактивная часть</li>
+      <li class="rv" style="--d:1"><b>Мирослава Роговцева</b><i>Правовой аналитик, финансист</i>Анализ законов, финансовый расчёт проекта</li>
+    </ul>
+
+    <section class="chap" aria-labelledby="c4">
+      <div class="chap-h"><span class="no">Третий период</span><h2 id="c4" class="iri-h">Что вышло</h2></div>
+      <div class="chap-b">
+        <p class="lead rv">Цельный концепт сервиса: от интервью с экспертом до интерфейса, сценария работы и финансовой модели.</p>
+        <p class="rv">Ниже вся презентация проекта, её можно пролистать.</p>
+      </div>
+    </section>
+    <div class="iri-deck rv" aria-label="Слайды презентации">
+      <img src="../assets/img/iri/s01.webp" width="1600" height="900" alt="Обложка презентации «Автоматизация претензионной работы»" loading="lazy" data-zoom="deck" data-i="0">
+      <img src="../assets/img/iri/s02.webp" width="1600" height="900" alt="Этапы проекта" loading="lazy" data-zoom="deck" data-i="1">
+      <img src="../assets/img/iri/s03.webp" width="1600" height="900" alt="Распределение ролей в проекте" loading="lazy" data-zoom="deck" data-i="2">
+      <img src="../assets/img/iri/s04.webp" width="1600" height="900" alt="Проблема и компания" loading="lazy" data-zoom="deck" data-i="3">
+      <img src="../assets/img/iri/s05.webp" width="1600" height="900" alt="Цель, задачи и решение" loading="lazy" data-zoom="deck" data-i="4">
+      <img src="../assets/img/iri/s13.webp" width="1600" height="900" alt="Статистика по каналам подачи" loading="lazy" data-zoom="deck" data-i="5">
+      <img src="../assets/img/iri/s14.webp" width="1600" height="900" alt="Опыт крупных компаний: Т-Банк" loading="lazy" data-zoom="deck" data-i="6">
+      <img src="../assets/img/iri/s15.webp" width="1600" height="900" alt="Опыт крупных компаний: Сибур и Аэрофлот" loading="lazy" data-zoom="deck" data-i="7">
+      <img src="../assets/img/iri/s16.webp" width="1600" height="900" alt="Проблематика по статистике" loading="lazy" data-zoom="deck" data-i="8">
+      <img src="../assets/img/iri/s20.webp" width="1600" height="900" alt="Сервис с ИИ-алгоритмом: преимущества" loading="lazy" data-zoom="deck" data-i="9">
+      <img src="../assets/img/iri/s21.webp" width="1600" height="900" alt="Устройство сервиса MAXLAW" loading="lazy" data-zoom="deck" data-i="10">
+      <img src="../assets/img/iri/s22.webp" width="1600" height="900" alt="План работы сервиса" loading="lazy" data-zoom="deck" data-i="11">
+      <img src="../assets/img/iri/s23.webp" width="1600" height="900" alt="Финансы проекта" loading="lazy" data-zoom="deck" data-i="12">
+    </div>
+  </div>
+  <section class="sec">
+    <div class="wrap">
+      <a class="next" href="den-borby-s-leykozom.html"><span><small>Весь альбом пройден. С начала</small><strong>День борьбы с лейкозом</strong></span><span class="pill" aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</main>
+
+<footer class="foot" id="contacts">
+  <div class="wrap">
+    <h2 class="crush rv">Напишите мне</h2>
+    <div class="row rv" style="--d:1">
+      <a class="pill pill--fill" href="https://t.me/needreid" target="_blank" rel="noopener">Telegram · @needreid</a>
+      <span class="mail"><span id="mailText">needreid@yandex.ru</span><button type="button" id="copyMail">Скопировать</button></span>
+      <a class="pill" href="https://t.me/ulitkakoksa" target="_blank" rel="noopener">Канал «Улитки Кокарева»</a>
+    </div>
+    <div class="fine"><span>© 2026 Михаил Гришин</span></div>
+  </div>
+</footer>
+<script src="../assets/js/main.js"></script>
+<script src="../assets/js/iri.js"></script>
+</body>
+</html>
