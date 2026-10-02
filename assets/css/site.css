@@ -703,3 +703,6 @@ img[data-zoom]{cursor:zoom-in}
   .hero-top .st:nth-child(5){left:84%!important;top:62%!important}
 }
 @media (max-width:900px){.odk-fan{min-height:calc(min(34vw,262px) * 1.45 + 24px)}}
+
+.p-iri::before{-webkit-mask:linear-gradient(90deg,transparent,#000 24%);mask:linear-gradient(90deg,transparent,#000 24%)}
+.p-iri h3 span{padding-right:.24em}
