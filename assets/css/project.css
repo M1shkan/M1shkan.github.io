@@ -1167,13 +1167,6 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .team i,.fin dt{font-size:12px}
 @media (max-width:860px){.bl{font-size:12px!important}.pains li{font-size:14px}}
 
-/* ноутбук: рамка экрана и корпус нарисованы стилями, скриншот лежит ровно внутри */
-.lap{position:relative;display:block;width:100%;filter:drop-shadow(0 28px 34px rgba(0,0,0,.32))}
-.lap-scr{position:relative;display:block;margin:0 7%;padding:2.2% 2.2% 2.6%;background:#1b1b1d;border-radius:14px 14px 6px 6px;box-shadow:inset 0 0 0 1px #3a3a3d}
-.lap-scr::before{content:"";position:absolute;left:50%;top:0;width:12%;height:2.4%;min-height:6px;transform:translateX(-50%);background:#1b1b1d;border-radius:0 0 8px 8px;z-index:2}
-.lap-scr img{display:block;width:100%;aspect-ratio:1600/1040;object-fit:cover;object-position:top;border-radius:4px;background:#fff}
-.lap-base{display:block;height:0;padding-top:3.2%;margin-top:-1px;background:linear-gradient(#d9dade,#a9abb0 55%,#8d8f94);border-radius:0 0 18px 18px/0 0 60% 60%;position:relative}
-.lap-base::after{content:"";position:absolute;left:50%;top:0;width:16%;height:38%;transform:translateX(-50%);background:#b8babe;border-radius:0 0 10px 10px}
 .flow-lap .lap-scr{display:grid}
 .flow-lap .lap-scr img{grid-area:1/1;opacity:0;transition:opacity 450ms ease;cursor:zoom-in}
 .flow-lap .lap-scr img.on{opacity:1}
@@ -1206,3 +1199,13 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .iri-steps li.hl b,.iri-steps li.hl::before{color:#111}
 .sd-stage img:not(.on),.flow-lap .lap-scr img:not(.on){pointer-events:none;visibility:hidden}
 .sd-stage img.on,.flow-lap .lap-scr img.on{visibility:visible}
+.cd figcaption{margin-top:14px}
+@media (max-width:860px){.proj-hero .art{margin-top:28px}}
+.t-iri .proj-hero .txt{position:relative;z-index:2}
+.iri-art .iri-lap{left:4%;width:96%}
+.iri-sheet h1{line-height:1.22}
+.iri-band{padding:.1em .18em .04em}
+.t-iri .proj-hero .meta-row{position:relative;z-index:2;background:#fff;box-shadow:0 0 0 12px #fff}
+.t-iri .proj-hero::before{-webkit-mask:linear-gradient(#000 calc(100% - 200px),transparent calc(100% - 150px));mask:linear-gradient(#000 calc(100% - 200px),transparent calc(100% - 150px))}
+.t-iri .proj-hero .meta-row{background:none;box-shadow:none}
+@media (max-width:860px){.t-iri .proj-hero::before{-webkit-mask:linear-gradient(transparent,#000 25%,#000 45%,transparent 58%);mask:linear-gradient(transparent,#000 25%,#000 45%,transparent 58%);height:70%;bottom:auto;top:30%}}

@@ -686,3 +686,20 @@ img[data-zoom]{cursor:zoom-in}
 
 @font-face{font-family:"Unbounded Sans";src:url(../fonts/unbounded-sans.woff2) format("woff2");font-weight:400;font-display:swap}
 .iri-stage .il{width:80%!important;left:2%;bottom:6%!important;transform:rotate(-2deg)}
+
+/* ноутбук: рамка экрана и корпус нарисованы стилями, скриншот лежит ровно внутри */
+.lap{position:relative;display:block;width:100%;filter:drop-shadow(0 28px 34px rgba(0,0,0,.32))}
+.lap-scr{position:relative;display:block;margin:0 7%;padding:2.2% 2.2% 2.6%;background:#1b1b1d;border-radius:14px 14px 6px 6px;box-shadow:inset 0 0 0 1px #3a3a3d}
+.lap-scr::before{content:"";position:absolute;left:50%;top:0;width:12%;height:2.4%;min-height:6px;transform:translateX(-50%);background:#1b1b1d;border-radius:0 0 8px 8px;z-index:2}
+.lap-scr img{display:block;width:100%;aspect-ratio:1600/1040;object-fit:cover;object-position:top;border-radius:4px;background:#fff}
+.lap-base{display:block;height:0;padding-top:3.2%;margin-top:-1px;background:linear-gradient(#d9dade,#a9abb0 55%,#8d8f94);border-radius:0 0 18px 18px/0 0 60% 60%;position:relative}
+.lap-base::after{content:"";position:absolute;left:50%;top:0;width:16%;height:38%;transform:translateX(-50%);background:#b8babe;border-radius:0 0 10px 10px}
+.iri-stage .il{display:block}
+.iri-stage .lap-scr img{object-position:top left}
+
+/* Наклейки и картинки не наезжают на текст на промежуточных ширинах */
+@media (min-width:901px) and (max-width:1240px){
+  .hero-top .st:nth-child(2){left:66%!important;top:30%!important}
+  .hero-top .st:nth-child(5){left:84%!important;top:62%!important}
+}
+@media (max-width:900px){.odk-fan{min-height:calc(min(34vw,262px) * 1.45 + 24px)}}
