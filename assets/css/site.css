@@ -650,3 +650,15 @@ img[data-zoom]{cursor:zoom-in}
 @media (hover:hover){.sk-tools li:hover{transform:translateY(-3px) rotate(-2deg)}}
 @media (max-width:900px){.sk-tools{grid-template-columns:1fr}.sk-tools ul{gap:8px}.sk-tools li{padding:9px 15px;font-size:15px}}
 @media (max-width:900px){.sk{grid-template-columns:1fr;gap:10px}.sk-in{justify-content:flex-start}}
+
+/* ---------- Сетка заголовков: верх к верху. Обрезаем пустые поля строки, чтобы верх заглавных букв
+   крупного заголовка и первой строки текста стоял на одной линии ---------- */
+.head{align-items:start}
+.head h2,.head p,.sk h3,.sk p{text-box:trim-both cap alphabetic}
+.sk{align-items:start}
+.sk-in{margin-top:-2px}
+@supports not (text-box:trim-both cap alphabetic){
+  .head h2,.sk h3{margin-top:-.04em}
+  .head p,.sk p{margin-top:-.42em}
+}
+@media (max-width:900px){.head{gap:18px}.sk{gap:14px}}

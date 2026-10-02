@@ -952,3 +952,16 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
   .sw-dots i.on{width:22px;border-radius:4px;background:var(--head)}
 }
 @media (min-width:861px){.sw-dots{display:none}}
+
+/* Сетка заголовков на страницах проектов: крупный заголовок и первая строка текста стоят верх к верху,
+   а маленькая подпись над заголовком висит над этой линией и не сдвигает её */
+.sub{align-items:start}
+.sub h3,.sub > p,.chap-h h2,.chap-b > :first-child{text-box:trim-both cap alphabetic}
+.sub h3{position:relative}
+.sub h3 small{position:absolute;left:0;bottom:calc(100% + 14px);margin:0;white-space:nowrap;line-height:1}
+.sub:has(h3 small){padding-top:calc(clamp(56px,7vw,112px) + 26px)}
+.chap-h .no{line-height:16px}
+.chap-b{padding-top:44px}
+@supports not (text-box:trim-both cap alphabetic){.sub > p,.chap-b > :first-child{margin-top:-.38em}}
+@media (max-width:860px){.sub{gap:18px}.chap-b{padding-top:0}}
+.pband .sub:has(h3 small){padding-top:26px!important}
