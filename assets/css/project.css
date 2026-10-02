@@ -1060,7 +1060,7 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .case::after{content:"";position:absolute;top:-2px;right:-2px;width:var(--fold);height:var(--fold);background:linear-gradient(225deg,transparent 50%,#e6e6e3 50%);border-left:2px solid #747473;border-bottom:2px solid #747473}
 .case h4{margin:0;font-family:"Unbounded",var(--f-crush);font-weight:800;font-size:22px;text-transform:uppercase;color:#111}
 .case p{margin:0}
-.case .s{color:#1f9d55}.case .m{color:#b98a00}.case .l{color:#c0392b}
+.case .s{color:#16723d}.case .m{color:#7d5c00}.case .l{color:#c0392b}
 .case-n{display:flex;align-items:baseline;gap:10px;margin-top:auto!important;padding-top:12px;border-top:2px solid var(--lime);font-weight:600}
 .case-n b{font-family:"Unbounded",var(--f-crush);font-weight:800;font-size:30px;color:#111}
 
@@ -1100,13 +1100,13 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .fin div + div{padding-left:clamp(14px,2vw,24px);border-left:1px solid var(--slot)}
 .fin dt{font-size:13px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
 .fin dd{margin:0;font-family:"Unbounded",var(--f-crush);font-weight:800;font-size:clamp(36px,4.6vw,72px);line-height:1;color:var(--head)}
-.fin dd small{font-size:.36em;font-weight:700}
+.fin dd small{font-size:max(15px,.36em);font-weight:700}
 .team{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .team li{position:relative;display:grid;gap:8px;align-content:start;padding:18px;padding-right:calc(var(--fold) + 8px);background:#fff;color:#4a4a49;border:2px solid #747473;border-radius:6px;clip-path:polygon(0 0,calc(100% - var(--fold)) 0,100% var(--fold),100% 100%,0 100%);font-size:14px;line-height:1.4}
 .team li::after{content:"";position:absolute;top:-2px;right:-2px;width:var(--fold);height:var(--fold);background:linear-gradient(225deg,transparent 50%,#e6e6e3 50%);border-left:2px solid #747473;border-bottom:2px solid #747473}
 .team b{font-family:"Unbounded",var(--f-crush);font-weight:800;font-size:16px;line-height:1.1;text-transform:uppercase;color:#111}
 .team i{font-style:normal;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:#747473;padding-bottom:8px;border-bottom:2px solid var(--lime)}
-.team li.me{background:var(--lime);border-color:#111}
+.team li.me{background:var(--lime);border-color:#111;color:#1d1d1c}
 .team li.me::after{background:linear-gradient(225deg,transparent 50%,#b5d43a 50%);border-color:#111}
 .team li.me i{color:#111;border-color:#111}
 
