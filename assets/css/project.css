@@ -965,3 +965,12 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 @supports not (text-box:trim-both cap alphabetic){.sub > p,.chap-b > :first-child{margin-top:-.38em}}
 @media (max-width:860px){.sub{gap:18px}.chap-b{padding-top:0}}
 .pband .sub:has(h3 small){padding-top:26px!important}
+/* Тарелки «Гжели» на телефоне: по одной в ряд, крупно, со сдвигом влево-вправо, как на полке */
+@media (max-width:600px){
+  .plates{grid-template-columns:1fr;gap:28px;max-width:none}
+  .plate-g .dish{width:min(82vw,340px);max-width:none}
+  .plate-g{justify-items:center}
+  .plate-g:nth-child(1){justify-self:start}
+  .plate-g:nth-child(2){justify-self:end}
+  .plate-g .lbl{font-size:12px;letter-spacing:.08em}
+}
