@@ -630,3 +630,21 @@ img[data-zoom]{cursor:zoom-in}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .disk{background:#0f2d66}}
 @media (max-width:760px){.disk{grid-template-columns:1fr}.disk-btn{justify-content:center;padding:18px 20px;font-size:16px;gap:10px}}
 @media (max-width:560px){.facts li{grid-template-columns:1fr;gap:4px}}
+
+/* ---------- Навыки: строки со ссылками на проекты, где навык работал ---------- */
+.skills{padding-block:clamp(64px,8vw,120px)}
+.sk-list{list-style:none;margin:0;padding:0;counter-reset:sk;border-top:1px solid var(--line)}
+.sk{counter-increment:sk;display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr) minmax(0,.9fr);gap:12px clamp(20px,3vw,48px);align-items:baseline;padding-block:clamp(20px,2.4vw,30px);border-bottom:1px solid var(--slot);position:relative}
+.sk h3{margin:0;font-family:var(--f-crush);font-weight:900;text-transform:uppercase;font-size:clamp(30px,3.2vw,52px);line-height:.9;color:var(--head);transition:transform 500ms var(--ease)}
+.sk p{margin:0;color:var(--muted);max-width:48ch}
+.sk-in{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+.sk-in a,.sk-in span{display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--text);text-decoration:none;white-space:nowrap;transition:background-color 250ms ease,color 250ms ease,border-color 250ms ease}
+.sk-in span{border-style:dashed;border-color:var(--slot);color:var(--muted)}
+.sk-in a::after{content:"→";margin-left:6px;transition:transform 300ms var(--ease)}
+@media (hover:hover){.sk-in a:hover{background:var(--blue);border-color:var(--blue);color:#fff}.sk-in a:hover::after{transform:translateX(3px)}.sk:hover h3{transform:translateX(6px)}}
+.sk-in a:focus-visible{outline:2px solid var(--blue);outline-offset:3px}
+.sk-tools{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:clamp(24px,3vw,40px)}
+.sk-tl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sk-tools ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.sk-tools li{padding:9px 16px;border-radius:999px;background:var(--blue);color:#fff;font-size:14px;font-weight:600}
+@media (max-width:900px){.sk{grid-template-columns:1fr;gap:10px}.sk-in{justify-content:flex-start}}
