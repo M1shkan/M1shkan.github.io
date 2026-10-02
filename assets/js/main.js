@@ -17,6 +17,17 @@
     };
     toTop(); addEventListener("load", toTop); addEventListener("pageshow", toTop);
   }
+  /* Главная: при уходе в проект запоминаем, где были, а по кнопке «назад» возвращаемся ровно туда */
+  if (!base) {
+    addEventListener("pagehide", function () { try { sessionStorage.setItem("homeY", String(scrollY)); } catch (e) {} });
+    var nav = performance.getEntriesByType && performance.getEntriesByType("navigation")[0];
+    var homeY = null; try { homeY = sessionStorage.getItem("homeY"); } catch (e) {}
+    if (nav && nav.type === "back_forward" && homeY !== null && !location.hash) {
+      try { history.scrollRestoration = "manual"; } catch (e) {}
+      var back = function () { window.scrollTo({ top: +homeY, left: 0, behavior: "instant" }); };
+      back(); addEventListener("load", function () { back(); setTimeout(back, 120); });
+    }
+  }
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (m) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[m]; }); }
 
