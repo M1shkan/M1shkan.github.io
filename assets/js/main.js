@@ -153,10 +153,19 @@
     ["8-marta","Поздравление с 8 Марта"],
     {id:"ipod", t:"Превью в стиле iPod", s:[["ipod","Превью в стиле iPod"],["ipod-2","Превью в стиле iPod, второй слайд"]]},
     ["basket","Баскетбол «Динамо»"],
-    ["itogi-goda","Итоги года"],
+    {id:"itogi", t:"Итоги года «Улиток»", s:[["itogi-goda","Итоги года «Улиток»: весь пост целиком"],
+["itogi-1","Итоги года «Улиток», слайд 1 из 9"],
+["itogi-2","Итоги года «Улиток», слайд 2 из 9"],
+["itogi-3","Итоги года «Улиток», слайд 3 из 9"],
+["itogi-4","Итоги года «Улиток», слайд 4 из 9"],
+["itogi-5","Итоги года «Улиток», слайд 5 из 9"],
+["itogi-6","Итоги года «Улиток», слайд 6 из 9"],
+["itogi-7","Итоги года «Улиток», слайд 7 из 9"],
+["itogi-8","Итоги года «Улиток», слайд 8 из 9"],
+["itogi-9","Итоги года «Улиток», слайд 9 из 9"]]},
     ["pasha","Пасха"]
   ];
-  var dims = {"8-marta":744,"afisha-match":1250,"afisha-spartak":827,"auction":1123,"basket":1250,"bond":1000,"dynamo-103":1250,"ipod":1000,"itogi-goda":1186,"kokarev-dr":1211,"mhl-preview":1242,"miska-dr":1211,"nikonov":1260,"pasha":1250,"pobeda":827,"regbi-bot":586,"tablica":1000,"talipov":1000,"trener":1250,"yashkin-chui":1250,"yashkin-obi":1250,"mhk-anons":1000,"podsuha":1000,"regbi-cover":1211,"mishechkin-dr":1211,"m8-gavrilov":1000,"m8-tazutdinov":1000,"m8-story":1700,"m8-safronenko":1000,"m8-trener-story":1778,"mhk-veduschiy":1778,"mhk-vopros":1778,"ipod-2":1000,"regbi-zayavka":586,"bot-piter":559};
+  var dims = {"8-marta":744,"afisha-match":1250,"afisha-spartak":827,"auction":1123,"basket":1250,"bond":1000,"dynamo-103":1250,"ipod":1000,"itogi-goda":1186,"itogi-1":1185,"itogi-2":1185,"itogi-3":1185,"itogi-4":1185,"itogi-5":1185,"itogi-6":1185,"itogi-7":1185,"itogi-8":1185,"itogi-9":1185,"kokarev-dr":1211,"mhl-preview":1242,"miska-dr":1211,"nikonov":1260,"pasha":1250,"pobeda":827,"regbi-bot":586,"tablica":1000,"talipov":1000,"trener":1250,"yashkin-chui":1250,"yashkin-obi":1250,"mhk-anons":1000,"podsuha":1000,"regbi-cover":1211,"mishechkin-dr":1211,"m8-gavrilov":1000,"m8-tazutdinov":1000,"m8-story":1700,"m8-safronenko":1000,"m8-trener-story":1778,"mhk-veduschiy":1778,"mhk-vopros":1778,"ipod-2":1000,"regbi-zayavka":586,"bot-piter":559};
   function slides(n) { var m = n % 10, h = n % 100; return n + " " + (m === 1 && h !== 11 ? "слайд" : m >= 2 && m <= 4 && (h < 12 || h > 14) ? "слайда" : "слайдов"); }
   function feedImg(f, zoom, i, extra) { return '<img src="assets/img/feed/' + f[0] + '.webp" alt="' + esc(f[1]) + '" width="1000" height="' + (dims[f[0]] || 1000) + '" loading="lazy" data-zoom="' + zoom + '" data-i="' + i + '"' + (extra || "") + ">"; }
   var wall = $("wall");
