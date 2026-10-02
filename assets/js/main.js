@@ -341,11 +341,3 @@
     try { navigator.clipboard.writeText(mt.textContent).then(done, sel); } catch (e) { sel(); }
   });
 })();
-
-/* Кнопка «назад» в шапке: если пришли с этого же сайта — шаг назад по истории (страница вернётся туда, где была), иначе — в альбом */
-(function () {
-  var b = document.querySelector(".back-fab"); if (!b) return;
-  b.addEventListener("click", function (e) {
-    try { if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) { e.preventDefault(); history.back(); } } catch (x) {}
-  });
-})();
