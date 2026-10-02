@@ -1217,3 +1217,6 @@ body.t-plat{background:var(--canvas) var(--tex) 0 0/600px 600px repeat}
 .iri-band{padding:.1em .28em .04em .18em}
 .t-iri .proj-hero::before{-webkit-mask:linear-gradient(90deg,transparent,#000 22%),linear-gradient(#000 calc(100% - 200px),transparent calc(100% - 140px));-webkit-mask-composite:source-in;mask:linear-gradient(90deg,transparent,#000 22%) intersect,linear-gradient(#000 calc(100% - 200px),transparent calc(100% - 140px))}
 @media (max-width:860px){.t-iri .proj-hero::before{-webkit-mask:linear-gradient(transparent,#000 25%,#000 45%,transparent 58%);mask:linear-gradient(transparent,#000 25%,#000 45%,transparent 58%)}}
+/* Каждая строка заголовка — своя плашка, плашки не перекрывают соседние строки */
+.iri-sheet h1{line-height:1}
+.iri-sheet h1 .iri-band{display:block;width:fit-content;margin:0 0 .1em -.18em;padding:.12em .28em .08em .18em}
