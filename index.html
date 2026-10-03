@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alumni+Sans:wght@900&family=Geologica:wght@400..700&family=PT+Serif:ital@1&family=Press+Start+2P&family=Yeseva+One&family=Russo+One&display=swap">
-<link rel="stylesheet" href="assets/css/site.css?v=20261002">
+<link rel="stylesheet" href="assets/css/site.css?v=20261003">
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержанию</a>
@@ -134,12 +134,26 @@
           <div class="sk-in"><a href="projects/den-borby-s-leykozom.html#font">Шрифт к матчу</a><a href="projects/forma-gzhel.html#pattern">Роспись «Гжель»</a></div>
         </li>
         <li class="sk rv">
+          <h3>Моушн</h3>
+          <p>Анимирую графику в Figma Motion: тестовые плашки к матчу, анимация для проекта ко Дню борьбы с лейкозом.</p>
+          <div class="sk-in"><a href="projects/den-borby-s-leykozom.html">День борьбы с лейкозом</a><span>Плашки к матчу</span></div>
+        </li>
+        <li class="sk rv">
           <h3>Код</h3>
           <p>HTML/CSS и Python: интерфейсы сервисов, Telegram-боты, веб-приложения вроде «Операторской» для наших матчей и этот сайт.</p>
-          <div class="sk-in"><a href="projects/iri-maxlaw.html#maxlaw">Сервис MAXLAW</a><span>Telegram-боты</span><span>«Операторская»</span><span>Этот сайт</span></div>
+          <div class="sk-in"><a href="projects/iri-maxlaw.html#maxlaw">Сервис MAXLAW</a><a href="#dev">Telegram-боты</a><a href="#dev">«Операторская»</a><span>Этот сайт</span></div>
         </li>
       </ol>
-      <div class="sk-tools rv"><span class="sk-tl">Инструменты</span><ul><li>Figma</li><li>Illustrator</li><li>Photoshop</li><li>HTML/CSS</li><li>Python</li><li>Нейросети</li></ul></div>
+      <div class="sk-tools rv">
+        <div class="sk-th"><span class="sk-tl">Инструменты</span><p>Чем работаю каждый день и для чего.</p></div>
+        <ul class="tool-grid">
+          <li class="tool tool--main"><b>Figma</b><em>Основной инструмент</em><span>Собираю макеты на auto layout, ускоряю работу плагинами, рисую вектор и анимирую в Figma Motion.</span><i>Auto layout</i><i>Плагины</i><i>Анимация</i><i>Вектор</i></li>
+          <li class="tool"><b>Photoshop</b><span>Первичная обработка фотографий и ретушь.</span></li>
+          <li class="tool"><b>Illustrator</b><span>Подготовка макетов к печати.</span></li>
+          <li class="tool"><b>HTML/CSS и Python</b><span>Вёрстка, Telegram-боты и сервисы.</span></li>
+          <li class="tool"><b>Нейросети</b><span>Claude: вёрстка и код, в том числе для этого сайта.</span></li>
+        </ul>
+      </div>
     </div>
   </section>
 
@@ -211,14 +225,26 @@
             <span class="pill go">Смотреть проект</span>
           </div>
           <div class="iri-stage" aria-hidden="true">
-            <span class="il"><span class="lap"><span class="lap-scr"><img src="assets/img/iri/scr-cab.webp" alt="" width="1600" height="1058" loading="lazy"></span><span class="lap-base"></span></span></span>
-            <span class="ic"><img src="assets/img/iri/maxlaw-light.webp" alt="" width="873" height="537" loading="lazy"></span>
+            <span class="il"><span class="lap"><span class="lap-scr"><img src="assets/img/iri/scr-cab.webp" alt="" width="1600" height="1058" decoding="async"></span><span class="lap-base"></span></span></span>
+            <span class="ic"><img src="assets/img/iri/maxlaw-light.webp" alt="" width="873" height="537" decoding="async"></span>
           </div>
         </a>
       </div>
     </div>
   </section>
 
+
+  <section class="sec xp" id="dev" aria-labelledby="h-dev">
+    <div class="wrap">
+      <div class="head"><h2 id="h-dev" class="crush rv">Разработка</h2><p class="rv" style="--d:1">Помимо дизайна собираю ботов и сервисы для болельщиков. Всё ниже работало на реальных матчах.</p></div>
+      <ul class="xp-grid">
+        <li class="xp-c rv"><span class="xp-k">Telegram-бот</span><h3>Финал Кубка России по регби</h3><p>Бот для заявок на билеты на финал.</p><div class="xp-n"><b>100+</b><span>заявок</span></div><div class="xp-n"><b>300</b><span>мест: забили сектор</span></div></li>
+        <li class="xp-c rv" style="--d:1"><span class="xp-k">Telegram-бот</span><h3>Выезд в Санкт&#8209;Петербург</h3><p>Сбор и подтверждение заявок на выездной матч.</p><div class="xp-n"><b>1</b><span>полный автобус</span></div></li>
+        <li class="xp-do rv" style="--d:2"><span class="xp-dt">Что делал</span><ul><li>Сборка бота</li><li>Запуск на сервере</li><li>Администрирование</li><li>Роли</li><li>Полное оформление</li></ul><p>Всё в сжатые сроки, и всё работало в штатном режиме.</p></li>
+      </ul>
+      <div class="xp-op rv"><span class="xp-k">Веб-приложение</span><h3>«Операторская»</h3><p>Сервис для работы на наших матчах.</p></div>
+    </div>
+  </section>
 
   <section class="sec band feed-band" id="feed" aria-labelledby="h-feed">
     <div class="wrap">
@@ -256,6 +282,6 @@
   </div>
 </footer>
 
-<script src="assets/js/main.js?v=20261002"></script>
+<script src="assets/js/main.js?v=20261003"></script>
 </body>
 </html>

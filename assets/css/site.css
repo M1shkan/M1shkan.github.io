@@ -706,3 +706,50 @@ img[data-zoom]{cursor:zoom-in}
 
 .p-iri::before{-webkit-mask:linear-gradient(90deg,transparent,#000 24%);mask:linear-gradient(90deg,transparent,#000 24%)}
 .p-iri h3 span{padding-right:.24em}
+/* pool 6: tools */
+.sk-tools{grid-template-columns:minmax(0,.9fr) minmax(0,2fr);align-items:start}
+.sk-th{display:grid;gap:14px}.sk-th p{margin:0;color:rgba(255,255,255,.82);max-width:24ch}
+.tool-grid{list-style:none;margin:0;padding:0;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important}
+.sk-tools .tool{display:flex;flex-wrap:wrap;align-content:start;gap:6px;padding:18px 20px;border-radius:20px;background:#fff;color:var(--ink);font-size:15px;font-weight:400;box-shadow:0 10px 22px -14px rgba(0,0,0,.45)}
+.tool b{flex-basis:100%;font-size:clamp(19px,1.6vw,24px);font-weight:800;color:var(--blue);line-height:1.1}
+.tool span{flex-basis:100%;color:#2c3c5e;line-height:1.4}
+.tool em{font-style:normal;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:4px 9px;border-radius:999px;background:#d7f05a;color:#0a1a3a}
+.tool i{font-style:normal;font-size:13px;font-weight:700;padding:5px 11px;border-radius:999px;border:1.5px solid var(--blue);color:var(--blue)}
+.tool--main{grid-column:1/-1;padding:22px 24px}
+.tool--main b{flex-basis:auto;font-size:clamp(28px,2.6vw,40px);margin-right:6px}
+.tool--main span{margin-block:2px 6px}
+@media (hover:hover){.sk-tools .tool:hover{transform:translateY(-3px)}}
+@media (max-width:900px){.sk-tools .tool{padding:16px 18px;font-size:15px}}
+@media (max-width:560px){.tool-grid{grid-template-columns:1fr}}
+/* pool 6: dev */
+.xp-grid{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:clamp(12px,1.4vw,20px)}
+.xp-c{display:flex;flex-direction:column;gap:12px;padding:clamp(20px,2.2vw,30px);border:1.5px solid var(--line);border-radius:28px;background:var(--card)}
+.xp-k{align-self:flex-start;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding:5px 10px;border-radius:999px;background:var(--blue);color:#fff}
+.xp-c h3{margin:0;font-family:var(--f-crush);font-weight:900;text-transform:uppercase;font-size:clamp(24px,2.2vw,34px);line-height:.95;color:var(--head)}
+.xp-c p{margin:0;color:var(--muted)}
+.xp-n{display:flex;align-items:baseline;gap:10px;padding-top:12px;border-top:1px solid var(--slot)}
+.xp-c p + .xp-n{margin-top:auto}
+.xp-n b{font-family:var(--f-crush);font-weight:900;font-size:clamp(44px,4.4vw,72px);line-height:.85;color:var(--blue)}
+.xp-n span{color:var(--text);font-weight:600}
+.xp-do{display:flex;flex-direction:column;gap:14px;padding:clamp(20px,2.2vw,30px);border-radius:28px;background:var(--blue);color:#fff}
+.xp-dt{font-family:var(--f-crush);font-weight:900;text-transform:uppercase;font-size:clamp(24px,2.2vw,34px);line-height:.95}
+.xp-do ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
+.xp-do ul li{padding:8px 14px;border-radius:999px;background:#fff;color:var(--blue);font-size:14px;font-weight:700}
+.xp-do p{margin:auto 0 0;padding-top:12px;border-top:1px solid rgba(255,255,255,.35);color:rgba(255,255,255,.9)}
+.xp-op{display:flex;flex-wrap:wrap;align-items:center;gap:10px 20px;margin-top:clamp(12px,1.4vw,20px);padding:clamp(18px,2vw,26px) clamp(20px,2.2vw,30px);border-radius:28px;background:var(--band)}
+.xp-op h3{margin:0;font-family:var(--f-crush);font-weight:900;text-transform:uppercase;font-size:clamp(24px,2.2vw,34px);line-height:.95;color:var(--head)}
+.xp-op p{margin:0;color:var(--muted)}
+.xp .head h2{font-size:clamp(46px,7.6vw,124px)}
+:root[data-theme="dark"] .xp-do{background:#0f2d66}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xp-do{background:#0f2d66}}
+:root[data-theme="dark"] .xp-n b{color:#8fb8ff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .xp-n b{color:#8fb8ff}}
+@media (max-width:900px){.xp-grid{grid-template-columns:1fr}.xp-op{flex-direction:column;align-items:flex-start}}
+/* pool 6: iri tile mobile */
+.iri-stage .lap-scr img{height:auto}
+@media (max-width:900px){
+  .iri-stage{min-height:0;padding:22px 0 4px}
+  .iri-stage .il{position:relative;left:0;bottom:auto!important;width:88%!important;transform:rotate(-2deg)}
+  .iri-stage .ic{top:0;right:0;width:34%;padding:5% 4%}
+}
+@media (max-width:900px){.sk-tools{grid-template-columns:1fr}.sk-th p{max-width:none}}
