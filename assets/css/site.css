@@ -755,3 +755,5 @@ img[data-zoom]{cursor:zoom-in}
 @media (max-width:900px){.sk-tools{grid-template-columns:1fr}.sk-th p{max-width:none}}
 .tool em,.tool i{align-self:center;line-height:1.2}
 @media (min-width:901px){.p-iri .txt{align-self:end}}
+@media (min-width:901px){.iri-stage{align-self:stretch}.iri-stage .il{top:50%;bottom:auto!important;translate:0 -46%}.iri-stage .ic{top:auto;bottom:16%}}
+@media (max-width:900px){.pt-desk{height:clamp(270px,80vw,360px);margin-top:10px}.pt-desk .s1{top:0;left:4%}.pt-desk .s2{top:3%;left:29%}.pt-desk .s3{top:1%;left:49%}.pt-ink{top:auto;bottom:52%;right:3%;transform:rotate(-6deg)}}
