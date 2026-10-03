@@ -753,3 +753,4 @@ img[data-zoom]{cursor:zoom-in}
   .iri-stage .ic{top:0;right:0;width:34%;padding:5% 4%}
 }
 @media (max-width:900px){.sk-tools{grid-template-columns:1fr}.sk-th p{max-width:none}}
+.tool em,.tool i{align-self:center;line-height:1.2}
