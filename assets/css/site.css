@@ -786,3 +786,8 @@ img[data-zoom]{cursor:zoom-in}
 @media (hover:hover) and (pointer:fine){.xp-bot:hover .xp-st{transform:rotate(calc(var(--r) * -.5)) translate(-6px,-10px) scale(1.03);box-shadow:0 30px 40px -18px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.06)}}
 @media (prefers-reduced-motion:reduce){.xp-st{transition:none}}
 @media (max-width:560px){.xp-bot{grid-template-columns:1fr}.xp-st{order:-1;width:64%;justify-self:center;margin:6px 0 10px;padding:6px;border-radius:14px}.xp-st img{border-radius:9px}}
+.xp-disk{grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:999px;background:#fff;color:var(--blue);font-weight:700;font-size:14px;text-decoration:none;transition:transform 300ms var(--ease)}
+.xp-disk::after{content:"↗"}
+@media (hover:hover){.xp-disk:hover{transform:translateY(-2px)}}
+.xp-disk:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media (max-width:900px){.xp-disk{justify-self:stretch;justify-content:center}}
