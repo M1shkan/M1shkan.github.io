@@ -754,3 +754,4 @@ img[data-zoom]{cursor:zoom-in}
 }
 @media (max-width:900px){.sk-tools{grid-template-columns:1fr}.sk-th p{max-width:none}}
 .tool em,.tool i{align-self:center;line-height:1.2}
+@media (min-width:901px){.p-iri .txt{align-self:end}}
