@@ -549,6 +549,8 @@ img[data-zoom]{cursor:zoom-in}
 .ha-row{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
 .ha-row .status{margin:0}
 .hero .expand{color:#fff;border-color:rgba(255,255,255,.7)}
+@media (hover:hover){.hero .expand:hover{background:#fff;color:var(--blue);border-color:#fff}}
+.hero .expand:focus-visible{outline:2px solid #fff;outline-offset:3px}
 .ha-txt .cta{margin-top:0}
 .hero .long .cols{border-color:rgba(255,255,255,.32)}
 .hero .long .cols p{color:#dde8ff}
