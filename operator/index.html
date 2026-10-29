@@ -184,6 +184,44 @@ button{cursor:pointer}
 .loss-bar.lock .loss-x{color:#FFEBB0}
 body.has-loss{padding-top:46px}
 .eq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px 22px}
+/* ── звуковая панель ── */
+.sb-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}   /* по две, как пульт над ней */
+.sb-btn{position:relative;display:flex;flex-direction:column;gap:5px;align-items:flex-start;text-align:left;
+  padding:12px 12px 14px;border-radius:10px;border:1px solid var(--line-2);background:transparent;color:var(--light);
+  cursor:pointer;overflow:hidden;transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+.sb-btn::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--pc)}
+.sb-btn:hover{transform:translateY(-2px);border-color:var(--pc)}
+.sb-btn .sb-label{font:600 13px/1.15 var(--disp);letter-spacing:.04em;text-transform:uppercase}
+.sb-btn small{font:400 10px var(--mono);letter-spacing:.08em;color:var(--muted)}
+.sb-btn.empty{opacity:.45}
+.sb-btn.on{border-color:var(--pc);box-shadow:0 0 0 1px var(--pc),0 18px 44px -24px var(--pc)}
+.sb-btn.on small{color:var(--pc)}
+.sb-bar{position:absolute;left:0;right:0;bottom:0;height:3px;background:transparent}
+.sb-bar b{display:block;height:100%;background:var(--pc);transition:width .25s linear}
+.pads-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:12px}
+.pad-acts{display:flex;gap:6px;align-items:center;margin-top:2px;flex-wrap:nowrap}
+.pad-acts .btn{white-space:nowrap}
+.pad-acts>span{flex:1}
+.pad-card{position:relative;display:flex;flex-direction:column;gap:10px;padding:14px 14px 14px 17px;
+  border:1px solid var(--line);border-radius:12px;background:var(--board-3)}
+.pad-card::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:3px;border-radius:2px;background:var(--pc)}
+.pad-name{flex:1;min-width:0;font:600 14px var(--ui);padding:9px 11px}
+.pad-key{flex:none;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:68px;padding:8px 10px;
+  border-radius:8px;border:1px solid var(--line-2);background:var(--board-2);color:var(--light);
+  font:600 14px var(--mono);cursor:pointer;box-shadow:0 3px 0 #0B1017;transition:all .15s ease}
+.pad-key small{font:400 9px var(--mono);letter-spacing:.1em;color:var(--muted);text-transform:uppercase}
+.pad-key:hover{border-color:var(--pc)}
+.pad-key.waiting{border-color:var(--gold);color:var(--gold);animation:lossPulse 1.2s ease-in-out infinite}
+.pad-add{min-height:180px;border-radius:12px;background:transparent;font:inherit;cursor:pointer}
+.pad-duck{display:flex;align-items:center;gap:9px;background:none;border:none;padding:2px 0;cursor:pointer;
+  font:400 12px var(--ui);color:var(--muted);text-align:left}
+.pad-duck i{position:relative;width:28px;height:16px;border-radius:9px;background:var(--line-2);flex:none;transition:background .15s}
+.pad-duck i::after{content:"";position:absolute;left:2px;top:2px;width:12px;height:12px;border-radius:50%;
+  background:var(--muted);transition:transform .15s,background .15s}
+.pad-duck.on{color:var(--soft)}
+.pad-duck.on i{background:color-mix(in oklab,var(--pc) 45%,transparent)}
+.pad-duck.on i::after{transform:translateX(12px);background:var(--pc)}
+
 /* ── архив матчей ── */
 .arc-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
   padding:22px clamp(16px,4vw,64px);border-bottom:1px solid var(--line-3)}
@@ -658,6 +696,7 @@ body.has-loss{padding-top:46px}
         </div>
         <div class="hk-grid" id="hotkeyRow"></div>
       </div>
+      <div class="panel" id="padsPanel" style="margin-top:16px"></div>
     </div>
 
     <!-- 2.3 -->
@@ -753,6 +792,7 @@ body.has-loss{padding-top:46px}
         <span class="mono" style="font-size:11px">Пульт · Bluetooth-кликер</span>
         <div class="pad" id="padGrid"></div>
       </div>
+      <div class="panel hidden" id="sbPanel" style="display:flex;flex-direction:column;gap:12px;padding:18px 22px"></div>
       <button class="air-box hidden" id="announcerBox" data-act="micToggle" title="Включить или выключить микрофон"></button>
       <div class="panel" id="nowPanel" style="flex:1;display:flex;flex-direction:column;gap:12px;padding:22px;min-height:0"></div>
       <button class="btn" id="btnFinish" style="width:100%;font-size:16px;padding:16px 0">Завершить матч →</button>
@@ -918,6 +958,7 @@ body.has-loss{padding-top:46px}
 <audio id="aTrans" preload="auto"></audio>
 <audio id="aCheer" preload="auto"></audio>
 <audio id="aWhistle" preload="auto"></audio>
+<audio id="aPad" preload="auto"></audio>
 <script>
 (function(){
 "use strict";
@@ -1022,7 +1063,7 @@ function mediaPathFor(k,blob){
   const cat=known?(
       /^трек|^разминка/.test(low)?"Музыка":
       /сирена|предупреждение/.test(low)?"Сирены":
-      /крики|шум|переход|свисток/.test(low)?"Звуки":
+      /крики|шум|переход|свисток|джингл/.test(low)?"Звуки":
       /фото|логотип/.test(low)?"Фото":"Прочее")
     :/^audio\//.test(type)?"Аудио":
      /^image\//.test(type)?"Фото":"Прочее";
@@ -1273,6 +1314,13 @@ function defState(){
             routScore:5,                                      // при каком счёте он играет
             /* тракт музыки под арену: подъём низа, лимитер, общая громкость */
             eq:{on:true,rumble:32,sub:4,bass:3,mud:-2,presence:2,punch:4,out:1.15},
+            /* звуковая панель: короткие джинглы на свободные кнопки кликера */
+            pads:[
+              {id:"pad1",label:"Большинство",     key:"Digit1",fileKey:null,fileName:"",dur:0,trim:0,gain:1,duck:true},
+              {id:"pad2",label:"Последняя минута",key:"Digit2",fileKey:null,fileName:"",dur:0,trim:0,gain:1,duck:true},
+              {id:"pad3",label:"Давай-давай",     key:"Digit3",fileKey:null,fileName:"",dur:0,trim:0,gain:1,duck:true},
+              {id:"pad4",label:"Шайбу!",          key:"Digit4",fileKey:null,fileName:"",dur:0,trim:0,gain:1,duck:true}],
+            padDuckAmount:0.5,                               // насколько приседает музыка под джингл
             whistleKey:null,whistleName:"",whistleDur:0,whistleTrim:0,
             whistleGain:1,                                    // свисток судьи: пауза игры
             transKey:null,transName:"",transDur:0,transTrim:0,
@@ -1456,6 +1504,7 @@ function stopMusicOnResume(){
   fadeOutMusic(session);
 }
 function stopAudio(){
+  stopPad();
   session++; clearInterval(fadeIv); clearTimeout(clipT); clearTimeout(trimT); clearTimeout(sirenT);
   $("aSiren").pause(); $("aMusic").pause(); $("aCheer").pause();
   playingSide=null; curTrack=null; setGoalLock(false); setClockLock(false); renderNow();
@@ -1690,7 +1739,7 @@ function trackGain(t){
 let lastGainTracks=new WeakMap();     // что играет в каждом плеере — чтобы пересчитать при дакинге
 function applyGain(el,t){
   lastGainTracks.set(el,t);
-  const g=trackGain(t)*(typeof duckFactor==="number"?duckFactor:1);
+  const g=trackGain(t)*duckNow();
   const ch=chainFor(el);
   if(ch){ ch.gain.gain.value=g; }
   else { el.volume=Math.min(1,el.volume*Math.min(1,g)); }  // без Web Audio можно только приглушить
@@ -1701,7 +1750,7 @@ function refreshMusicGain(){
     if(!el||el.paused) return;
     const t=lastGainTracks.get(el);
     const ch=chainFor(el);
-    if(ch) ch.gain.gain.value=trackGain(t)*(typeof duckFactor==="number"?duckFactor:1);
+    if(ch) ch.gain.gain.value=trackGain(t)*duckNow();
   });
 }
 async function blobBuffer(blob){
@@ -2020,7 +2069,7 @@ function unlockAudio(){
   audioUnlocked=true;
   const c=actx();
   if(c&&c.state==="suspended") c.resume().catch(()=>{});
-  ["aSiren","aMusic","aPeriod","aWarn","aWarm","aPrev","aCheer","aTrans","aWhistle"].forEach(id=>{
+  ["aSiren","aMusic","aPeriod","aWarn","aWarm","aPrev","aCheer","aTrans","aWhistle","aPad"].forEach(id=>{
     const e=$(id); if(!e||e.src) return;
     e.src=SILENT;
     e.play().catch(()=>{}).finally(()=>{ if(e.src===SILENT) e.pause(); });
@@ -2915,6 +2964,7 @@ async function renderSetup(){
   await renderRoster("A"); await renderRoster("B");
   await renderAudio(); await renderWarmup();
   renderHotkeys(); renderTimerCfg();     // оба смотрят на выбранные команды — только после них
+  renderPadsSetup();
   measureBacklog();
 }
 
@@ -3054,7 +3104,7 @@ async function renderMatch(){
   const m=M(); if(!m) return;
   await renderTeamCard("A"); await renderTeamCard("B");
   $("mClock").textContent = m.phase==="warmup" ? "--:--" : mmss(m.remaining);
-  renderClockBtn(); renderLog(); await renderPad(); renderNow(); renderAnnouncer();
+  renderClockBtn(); renderLog(); await renderPad(); renderSoundboard(); renderNow(); renderAnnouncer();
 }
 setInterval(()=>{
   const b=$("nowBar"), mEl=$("aMusic");
@@ -3449,7 +3499,24 @@ document.addEventListener("click",async e=>{
     case "coachRoleSet": coachState.role=el.dataset.v; drawCoachChips(); break;
     case "plyPos": plyState.pos=el.dataset.v; drawPlyChips(); break;
     case "plyGrip": plyState.grip=el.dataset.v; drawPlyChips(); break;
-    case "rebind": awaitKey=el.dataset.key; renderHotkeys(); break;
+    case "rebind": awaitKey=el.dataset.key; renderHotkeys(); renderPadsSetup(); break;
+    /* ── звуковая панель ── */
+    case "padPlay": await playPad(el.dataset.id); renderPadsSetup(); break;
+    case "padStop": stopPad(); renderPadsSetup(); break;
+    case "padBind": awaitKey="pad:"+el.dataset.id; renderPadsSetup(); renderHotkeys(); break;
+    case "padUp": await attachPad(el.dataset.id,await pickFile("audio/*")); break;
+    case "padDuck": { const p=padById(el.dataset.id); if(p){ p.duck=p.duck===false; save(); renderPadsSetup(); } break; }
+    case "padAdd": {
+      if(pads().length>=PAD_MAX){ toast(`Кнопок не больше ${PAD_MAX}`); break; }
+      pads().push({id:uid(),label:"Новая кнопка",key:null,fileKey:null,fileName:"",dur:0,trim:0,gain:1,duck:true});
+      save(); renderPadsSetup(); renderSoundboard(); break; }
+    case "padDel": {
+      const p=padById(el.dataset.id); if(!p) break;
+      if(p.fileKey&&!confirm(`Удалить кнопку «${p.label}» вместе со звуком?`)) break;
+      if(padNow===p.id) stopPad();
+      if(p.fileKey){ await idbDel(p.fileKey); forget(p.fileKey); }
+      S.shared.pads=pads().filter(x=>x.id!==p.id);
+      save(); renderPadsSetup(); renderSoundboard(); break; }
     case "upSiren": await attachSiren(club(setupTeams[side]),await pickFile("audio/*")); break;
     case "upShared": await attachSiren(S.shared,await pickFile("audio/*")); break;
     case "favClub": {
@@ -3794,6 +3861,15 @@ document.addEventListener("input",async e=>{
       save(); applyEqLive();
       const lbl=$("eqLbl-"+b.k); if(lbl) lbl.textContent=eqValLabel(b,q);
     } }
+  if(act==="padLabel"){ const p=padById(el.dataset.id); if(p){ p.label=el.value.slice(0,28); save(); renderSoundboard(); } }
+  if(act==="padTrim"){ const p=padById(el.dataset.id); if(p){ p.trim=+el.value; save();
+    const l=$("padTrimLbl-"+p.id); if(l) l.textContent=p.trim>0?mmss(p.trim):"целиком"; } }
+  if(act==="padGain"){ const p=padById(el.dataset.id); if(p){ p.gain=(+el.value)/100; save();
+    if(padNow===p.id) $("aPad").volume=p.gain;
+    const l=$("padGainLbl-"+p.id); if(l) l.textContent=el.value+"%"; } }
+  if(act==="padDuckAmount"){ S.shared.padDuckAmount=(+el.value)/100; save();
+    if(padNow){ const pp=padById(padNow); padDuck=1; setPadDuck(!!pp&&pp.duck!==false); }
+    const l=$("padDuckLbl"); if(l) l.textContent=+el.value?el.value+"%":"не приседает"; }
   if(act==="trimWhistle"){ S.shared.whistleTrim=+el.value; save();
     const lbl=$("whistleTrimLbl"); if(lbl) lbl.textContent=mmss(S.shared.whistleTrim); }
   if(act==="whistleGain"){ S.shared.whistleGain=(+el.value)/100; save();
@@ -3891,8 +3967,19 @@ let awaitKey=null;
 document.addEventListener("keydown",e=>{
   if(awaitKey){
     e.preventDefault();
-    if(e.code!=="Escape") S.hotkeys[awaitKey]=e.code;
-    awaitKey=null; save(); renderHotkeys(); if(M()) renderPad();
+    const target=awaitKey, isPad=target.startsWith("pad:");
+    awaitKey=null;
+    if(e.code==="Escape"){ /* отмена */ }
+    else if(isPad&&(e.code==="Backspace"||e.code==="Delete")){
+      const p=padById(target.slice(4)); if(p){ p.key=null; toast(`У кнопки «${p.label}» больше нет клавиши`); }
+    }else{
+      /* одна кнопка кликера — одно действие: иначе на гол заиграл бы ещё и джингл */
+      const owner=keyOwner(e.code,target);
+      if(owner) toast(`Клавиша ${keyLabel(e.code)} уже занята: ${owner}. Сначала переназначь её там`);
+      else if(isPad){ const p=padById(target.slice(4)); if(p) p.key=e.code; }
+      else S.hotkeys[target]=e.code;
+    }
+    save(); renderHotkeys(); renderPadsSetup(); if(M()){ renderPad(); renderSoundboard(); }
     return;
   }
   const tag=document.activeElement&&document.activeElement.tagName;
@@ -3912,6 +3999,10 @@ document.addEventListener("keydown",e=>{
   else if(e.code===S.hotkeys.warmPrev){ if(warmOn){ e.preventDefault(); warmupPrev(); } }
   else if(e.code===S.hotkeys.mic){ e.preventDefault(); micToggle(); }
   else if(e.code===S.hotkeys.whistle){ e.preventDefault(); whistle(); }
+  else{
+    const pd=pads().find(p=>p.key&&p.key===e.code);
+    if(pd){ e.preventDefault(); playPad(pd.id); }
+  }
 });
 
 /* ═══════════ КНОПКИ ЭКРАНОВ ═══════════ */
@@ -4077,6 +4168,7 @@ function describeFiles(st){
   add(sh.sirenKey,"общая сирена периодов");
   add(sh.crowdKey,"шум трибун");
   add(sh.whistleKey,"свисток судьи");
+  (sh.pads||[]).forEach(pd=>add(pd.fileKey,"джингл «"+(pd.label||"без названия")+"»"));
   add(sh.transKey,"переход после песни");
   if(sh.rout) add(sh.rout.fileKey,"трек на разгром «"+(sh.rout.title||"без названия")+"»");
   add(sh.warnKey,"предупреждение о конце периода");
@@ -4110,6 +4202,7 @@ function collectFileKeys(st){
   });
   const sh=st.shared||{};
   add(sh.sirenKey); add(sh.warnKey); add(sh.crowdKey); add(sh.transKey); add(sh.whistleKey);
+  (sh.pads||[]).forEach(pd=>add(pd.fileKey));
   if(sh.rout) add(sh.rout.fileKey);
   Object.values(sh.warns||{}).forEach(w=>add(w&&w.key));
   ((st.warmup||{}).playlist||[]).forEach(t=>add(t.fileKey));
@@ -4282,6 +4375,7 @@ function stateIsBlank(st){
     c.sirenKey||c.cheerKey||c.logoKey||c.coach);
   const sh=st.shared||{};
   const shFilled=sh.sirenKey||sh.crowdKey||sh.transKey||sh.whistleKey||(sh.rout&&sh.rout.fileKey)||
+    (sh.pads||[]).some(pd=>pd.fileKey)||
     Object.values(sh.warns||{}).some(w=>w&&w.key);
   return !filled && !shFilled && !((st.warmup||{}).playlist||[]).length && !(st.matches||[]).length;
 }
@@ -4845,6 +4939,8 @@ let micDevices=[];
 let procChain=null, gateGain=null, gateAnalyser=null, gateIv=null, gateOpen=true, gateHold=0;
 let gateEverHeard=false;          // ворота начнут закрываться только после реального сигнала
 let duckFactor=1;
+let padDuck=1;                         // своё приглушение у звуковой панели — не мешает диктору
+function duckNow(){ return (typeof duckFactor==="number"?duckFactor:1)*padDuck; }
 
 function procParams(){ return S.announcer.proc||{}; }
 
@@ -4935,8 +5031,8 @@ function applyDuck(){
   if(typeof crowdGain!=="undefined"&&crowdGain){
     const base=(typeof S.shared.crowdVol==="number"?S.shared.crowdVol:0.45);
     const c=actx();
-    if(c) crowdGain.gain.setTargetAtTime(base*duckFactor,c.currentTime,0.08);
-    else crowdGain.gain.value=base*duckFactor;
+    if(c) crowdGain.gain.setTargetAtTime(base*duckNow(),c.currentTime,0.08);
+    else crowdGain.gain.value=base*duckNow();
   }
   refreshMusicGain();
 }
@@ -6324,6 +6420,168 @@ function arcTeamsTable(){
     </table></div>
     <div class="arc-note mono">В и П включают победы и поражения в овертайме (они вынесены отдельно в ВО и ПО).
       Очки: 2 за победу, 1 за ничью.</div>`;
+}
+
+
+/* ═══════════ ЗВУКОВАЯ ПАНЕЛЬ ═══════════
+   Короткие джинглы под игровые ситуации — «Большинство», «Шайбу!» — на
+   свободные кнопки кликера. Звучат поверх музыки и трибун из своего плеера,
+   на время джингла музыка приседает (своим множителем, диктору не мешает).
+   Повторное нажатие той же кнопки глушит джингл, другая кнопка — сменяет. */
+const PAD_MAX=8;
+const PAD_COLORS=["#FFC531","#35A7E8","#E14B60","#7CE0A8","#C792EA","#FF9F43","#8FD3FF","#C6D0DA"];
+let padNow=null, padT=null;
+function pads(){
+  if(!Array.isArray(S.shared.pads)) S.shared.pads=[];
+  return S.shared.pads;
+}
+function padById(id){ return pads().find(p=>p.id===id)||null; }
+function padColor(i){ return PAD_COLORS[i%PAD_COLORS.length]; }
+
+async function playPad(id){
+  const p=padById(id); if(!p) return;
+  const el=$("aPad");
+  if(padNow===id&&!el.paused){ stopPad(); return; }        // та же кнопка ещё раз — стоп
+  if(!p.fileKey){ toast(`К кнопке «${p.label}» не прикреплён звук — загрузи его в разделе 2.4`); return; }
+  const u=await url(p.fileKey);
+  if(!u){ toast(`Звук кнопки «${p.label}» потерян — открой «Файлы проекта»`); return; }
+  clearTimeout(padT);
+  el.src=u;
+  el.volume=Math.max(0,Math.min(1,typeof p.gain==="number"?p.gain:1));
+  try{ el.currentTime=0; }catch(e){}
+  padNow=id;
+  setPadDuck(p.duck!==false);
+  el.play().catch(err=>console.warn("Джингл не запустился",err));
+  if(p.trim>0) padT=setTimeout(stopPad,p.trim*1000);
+  renderSoundboard();
+}
+function stopPad(){
+  clearTimeout(padT); padT=null;
+  const el=$("aPad"); try{ el.pause(); }catch(e){}
+  const was=padNow; padNow=null;
+  setPadDuck(false);
+  if(was) renderSoundboard();
+}
+function setPadDuck(on){
+  const want=on?Math.max(0,1-(typeof S.shared.padDuckAmount==="number"?S.shared.padDuckAmount:0.5)):1;
+  if(Math.abs(want-padDuck)<0.001) return;
+  padDuck=want;
+  applyDuck();
+}
+/* полоска прогресса на играющей кнопке */
+function padProgress(){
+  const el=$("aPad"); if(!padNow||!el) return;
+  const p=padById(padNow); if(!p) return;
+  const total=p.trim>0?Math.min(p.trim,el.duration||p.trim):(el.duration||p.dur||0);
+  const pct=total?Math.min(100,el.currentTime/total*100):0;
+  document.querySelectorAll(`[data-pad-bar="${padNow}"]`).forEach(b=>b.style.width=pct+"%");
+}
+
+(function(){
+  const el=$("aPad"); if(!el) return;
+  el.addEventListener("timeupdate",padProgress);
+  /* джингл доиграл — музыка встаёт обратно, кнопка гаснет */
+  el.addEventListener("ended",()=>{ if(padNow) stopPad(); renderPadsSetup(); });
+})();
+
+/* ── пульт на экране матча ── */
+function renderSoundboard(){
+  const el=$("sbPanel"); if(!el) return;
+  const list=pads();
+  el.classList.toggle("hidden",!list.length);
+  if(!list.length) return;
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px">
+      <span class="mono" style="font-size:11px">Звуковая панель</span>
+      <span class="sec-line"></span>
+      ${padNow?`<button class="btn xs" data-act="padStop">■ стоп</button>`:""}
+    </div>
+    <div class="sb-grid">${list.map((p,i)=>{
+      const on=padNow===p.id, col=padColor(i);
+      return `<button class="sb-btn${on?" on":""}${p.fileKey?"":" empty"}" data-act="padPlay" data-id="${p.id}" style="--pc:${col}">
+        <span class="sb-label">${esc(p.label||"Без названия")}</span>
+        <small>${p.fileKey?esc(keyLabel(p.key)):"нет звука"}</small>
+        <i class="sb-bar"><b data-pad-bar="${p.id}" style="width:${on?"2%":"0"}"></b></i>
+      </button>`;}).join("")}</div>`;
+}
+
+/* ── настройка: раздел «Звуковая панель» ── */
+function renderPadsSetup(){
+  const el=$("padsPanel"); if(!el) return;
+  const list=pads();
+  const duckPct=Math.round((typeof S.shared.padDuckAmount==="number"?S.shared.padDuckAmount:0.5)*100);
+  el.innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:6px">
+      <span class="mono" style="font-size:11px">Звуковая панель</span>
+      <span class="sec-line"></span>
+      <span class="mono" style="font-size:10px;color:var(--muted-2)">${list.length} из ${PAD_MAX}</span>
+    </div>
+    <div class="mono" style="font-size:10px;color:var(--muted-2);text-transform:none;letter-spacing:0;line-height:1.7;margin-bottom:16px">
+      Короткие джинглы под ситуации на свободные кнопки кликера. Звучат поверх музыки и трибун;
+      повторное нажатие той же кнопки глушит звук. Работают на экране матча — так же, как остальные хоткеи.</div>
+    <div class="pads-grid">
+      ${list.map((p,i)=>padCard(p,i)).join("")}
+      ${list.length<PAD_MAX?`<button class="drop pad-add" data-act="padAdd">
+        <span style="font-size:22px;color:var(--muted)">+</span>
+        <span style="font-size:12px;color:var(--muted)">Добавить кнопку</span></button>`:""}
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:18px">
+      <span class="mono" style="font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0">Музыка под джинглом приседает на</span>
+      <input type="range" min="0" max="90" step="5" value="${duckPct}" data-act="padDuckAmount" style="width:200px;accent-color:var(--gold)">
+      <span class="mono" style="font-size:12px;color:var(--gold)" id="padDuckLbl">${duckPct?duckPct+"%":"не приседает"}</span>
+    </div>`;
+}
+function padCard(p,i){
+  const col=padColor(i), waiting=awaitKey==="pad:"+p.id;
+  const gain=Math.round((typeof p.gain==="number"?p.gain:1)*100);
+  return `<div class="pad-card" style="--pc:${col}">
+    <div style="display:flex;gap:10px;align-items:center">
+      <input class="inp pad-name" value="${esc(p.label)}" maxlength="28" data-act="padLabel" data-id="${p.id}" placeholder="Название кнопки">
+      <button class="pad-key${waiting?" waiting":""}" data-act="padBind" data-id="${p.id}"
+        title="${waiting?"Нажми клавишу. Esc — отмена, Backspace — снять":"Нажми, чтобы назначить клавишу кликера"}">
+        ${waiting?"жми…":p.key?esc(keyLabel(p.key)):"нет"}<small>${waiting?"Esc · ⌫":"клавиша"}</small></button>
+    </div>
+    ${p.fileKey?`
+      <div class="mono" style="font-size:11px;color:var(--soft);text-transform:none;letter-spacing:0;word-break:break-all">${esc(p.fileName||"звук")}</div>
+      <div style="display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--muted)">
+        <span>обрезать на</span><span style="color:var(--gold)" id="padTrimLbl-${p.id}">${p.trim>0?mmss(p.trim):"целиком"}</span></div>
+      <input type="range" min="0" max="${Math.max(2,Math.ceil(p.dur||10))}" step="1" value="${Math.round(p.trim||0)}"
+        data-act="padTrim" data-id="${p.id}" style="width:100%;accent-color:var(--pc)">`
+    :`<div class="drop" data-act="padUp" data-id="${p.id}" style="padding:14px 10px">
+        <span style="font-size:12px;color:var(--muted)">↑ Загрузить звук</span></div>`}
+    <div style="display:flex;justify-content:space-between;font:500 11px var(--mono);color:var(--muted)">
+      <span>громкость</span><span style="color:var(--pc)" id="padGainLbl-${p.id}">${gain}%</span></div>
+    <input type="range" min="10" max="100" step="5" value="${gain}" data-act="padGain" data-id="${p.id}" style="width:100%;accent-color:var(--pc)">
+    <button class="pad-duck${p.duck!==false?" on":""}" data-act="padDuck" data-id="${p.id}"
+      title="Приглушать музыку, пока звучит джингл"><i></i>приглушать музыку</button>
+    <div class="pad-acts">
+      ${p.fileKey?`<button class="btn xs" data-act="padPlay" data-id="${p.id}">${padNow===p.id?"■ стоп":"▶ слушать"}</button>
+        <button class="btn xs" data-act="padUp" data-id="${p.id}">заменить</button>`:""}
+      <span style="flex:1"></span>
+      <button class="btn xs danger" data-act="padDel" data-id="${p.id}" title="Удалить кнопку">✕</button>
+    </div>
+  </div>`;
+}
+async function attachPad(id,file){
+  const p=padById(id); if(!p||!file) return;
+  if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a|flac|aac)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
+  if(padNow===id) stopPad();
+  const key=await saveFile(file,"джингл «"+(p.label||"без названия")+"»");
+  if(p.fileKey){ await idbDel(p.fileKey); forget(p.fileKey); }
+  p.fileKey=key; p.fileName=file.name; p.trim=0; p.dur=p.dur||5;
+  save(); renderPadsSetup(); renderSoundboard();
+  audioDuration(key).then(d=>{ if(!d) return; p.dur=d; save(); renderPadsSetup(); });
+}
+
+/* ── кто уже держит клавишу: чтобы одна кнопка кликера не делала два дела ── */
+const HOTKEY_NAMES={goalA:"Гол хозяев",goalB:"Гол гостей",pause:"Пуск и пауза",warmNext:"Трек вперёд",
+  warmPrev:"Трек назад",mic:"Микрофон",whistle:"Свисток"};
+function keyOwner(code,except){
+  for(const [k,v] of Object.entries(S.hotkeys||{}))
+    if(v===code&&k!==except) return HOTKEY_NAMES[k]||k;
+  for(const p of pads())
+    if(p.key===code&&("pad:"+p.id)!==except) return "джингл «"+(p.label||"без названия")+"»";
+  return null;
 }
 
 })();
