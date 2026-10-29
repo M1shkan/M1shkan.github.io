@@ -968,7 +968,15 @@ function mediaPathFor(k,blob){
   const ext=(EXT[type]||fromName||".bin").toLowerCase();
   const base=(label.replace(/\.[a-z0-9]{2,5}$/i,"")||"файл")
     .replace(/[\\/:*?"<>|\u0000-\u001f]/g," ").replace(/\s+/g," ").trim().slice(0,80)||"файл";
-  return `${cat}/${base} [${String(k).replace(/[^a-z0-9]/gi,"").slice(-6)}]${ext}`;
+  return `${cat}/${base} [${keyTag(k)}]${ext}`;
+}
+/* короткая метка от всего ключа. Раньше брался хвост ключа, а у запасного
+   генератора ключей там время в миллисекундах — два файла с одним названием,
+   записанные подряд, легли бы в один путь и затёрли друг друга */
+function keyTag(k){
+  let h=0x811c9dc5;
+  for(const ch of String(k)){ h^=ch.charCodeAt(0); h=Math.imul(h,0x01000193)>>>0; }
+  return h.toString(36).padStart(6,"0").slice(-6);
 }
 
 /* чтение: сначала папка, потом хранилище браузера */
@@ -989,6 +997,76 @@ async function idbPut(k,b){
   }
   return rawPut(k,b);
 }
+/* ── файл проекта в папке ──
+   Медиа в папке без настроек — это просто куча mp3: какие команды, какой
+   трек чей, с какой секунды припев — всё это раньше жило только в браузере.
+   Теперь при каждом сохранении рядом с медиа пишется файл проекта, и папка
+   становится самодостаточной: открыл её в любом браузере, на сайте или
+   локально — подтянулось всё. */
+const MANIFEST="Операторская — проект.json";
+let manT=null, manifestSeen=null;      // manifestSeen: {savedAt, teams} последнего найденного в папке
+function scheduleManifest(){
+  if(!dirReady()) return;
+  clearTimeout(manT); manT=setTimeout(writeManifest,1200);
+}
+async function writeManifest(force){
+  if(!dirReady()) return false;
+  /* В папке лежит другой проект, и оператор ещё не решил, чей главнее:
+     молча перезаписывать его своим нельзя — это чьи-то составы и плейлисты */
+  if(!force&&manifestSeen&&manifestSeen.mine===false) return false;
+  try{
+    const st=JSON.parse(JSON.stringify(S));
+    delete st.match;                   // незаконченный матч — дело этого браузера, а не проекта
+    const doc={app:"Операторская 3.0",v:1,savedAt:new Date().toISOString(),state:st};
+    const fh=await mediaDir.getFileHandle(MANIFEST,{create:true});
+    const w=await fh.createWritable();
+    await w.write(new Blob([JSON.stringify(doc,null,1)],{type:"application/json"}));
+    await w.close();
+    manifestSeen={savedAt:doc.savedAt,teams:Object.keys(st.clubs||{}).length,mine:true};
+    return true;
+  }catch(e){ console.warn("Файл проекта в папку не записался",e); return false; }
+}
+async function readManifest(){
+  if(!dirReady()) return null;
+  try{
+    const f=await (await mediaDir.getFileHandle(MANIFEST)).getFile();
+    const d=JSON.parse(await f.text());
+    return (d&&d.state)?d:null;
+  }catch(e){ return null; }
+}
+/* настройки из папки поверх браузера; карта файлов — из папки, она про неё */
+async function loadFromManifest(ask){
+  const m=await readManifest();
+  if(!m){ if(ask) toast("В папке нет сохранённого проекта"); return false; }
+  if(ask&&!stateIsBlank(S)&&!confirm(
+      "Загрузить настройки проекта из папки?\n\n"+
+      "Команды, составы, статистика и плейлисты в этом браузере заменятся на те, что сохранены в папке. "+
+      "Свои потом можно вернуть кнопкой на экране настройки.")) return false;
+  try{ localStorage.setItem(LS+"_prev",JSON.stringify(S)); }catch(e){}
+  const localPaths=Object.assign({},S.mediaPaths||{});
+  applyBootstrapState({state:m.state});
+  S.mediaPaths=Object.assign(localPaths,m.state.mediaPaths||{});
+  S.mediaDirName=mediaDir?mediaDir.name:(S.mediaDirName||"");
+  manifestSeen={savedAt:m.savedAt,teams:Object.keys(m.state.clubs||{}).length,mine:true};
+  Object.keys(urls).forEach(k=>forget(k));
+  save();
+  preselectFromState();
+  return true;
+}
+/* после выбора папки или выдачи доступа: пустой браузер подхватывает проект
+   из папки молча, а свой проект без спроса не затираем */
+async function adoptFolder(){
+  const m=await readManifest();
+  manifestSeen=m?{savedAt:m.savedAt,teams:Object.keys(m.state.clubs||{}).length,mine:false}:null;
+  if(m&&stateIsBlank(S)){
+    await loadFromManifest(false);
+    toast(`Проект подтянут из папки «${mediaDir.name}»`);
+    return "loaded";
+  }
+  if(!m&&!stateIsBlank(S)) await writeManifest();   // своя папка без файла проекта — кладём его
+  return m?"found":"none";
+}
+
 /* сколько ключей смотрит в папку — для подписей и решения, просить ли доступ */
 function mappedCount(){ return Object.keys(mediaPaths()).length; }
 
@@ -1009,6 +1087,7 @@ async function grantMediaDir(){
   try{ mediaPerm=await mediaDir.requestPermission({mode:"readwrite"}); }
   catch(e){ console.warn("Доступ к папке не выдан",e); mediaPerm="denied"; }
   Object.keys(urls).forEach(k=>forget(k));       // ссылки на старые пустышки больше не годятся
+  if(mediaPerm==="granted") await adoptFolder();
   return mediaPerm==="granted";
 }
 /* выбрать папку: новую или ту же самую заново, если браузер забыл о ней */
@@ -1025,8 +1104,12 @@ async function pickMediaDir(){
   S.mediaDirName=h.name; save();
   Object.keys(urls).forEach(k=>forget(k));
   /* та же ли это папка, что была? проверяем по первому же файлу из настроек */
+  if(mediaPerm!=="granted"){ toast("Браузер не дал доступ к папке"); return false; }
+  const adopted=await adoptFolder();
+  if(adopted==="loaded") return true;
   const paths=Object.values(mediaPaths());
-  if(paths.length){
+  if(adopted==="found") toast(`В папке «${h.name}» сохранён другой проект — загрузить его можно на экране настройки`);
+  else if(paths.length){
     const probe=await dirRead(paths[0]);
     if(!probe) toast(`В папке «${h.name}» нет файлов этого проекта${was?` — раньше была «${was}»`:""}`);
     else toast(`Папка «${h.name}» подключена`);
@@ -1076,7 +1159,8 @@ async function url(k){
   return (urls[k]=URL.createObjectURL(b));
 }
 function forget(k){ if(k&&urls[k]){URL.revokeObjectURL(urls[k]);delete urls[k];} }
-async function saveFile(file){ const k=uid(); await idbPut(k,file); return k; }
+/* label — роль файла в проекте: по ней файл сразу ложится в нужный раздел папки */
+async function saveFile(file,label){ const k=uid(); if(label) labelHints.set(k,label); await idbPut(k,file); return k; }
 
 /* ═══════════ КЛУБЫ КХЛ ═══════════ */
 const CLUBS=[
@@ -1175,6 +1259,7 @@ let saveT=null;
 function save(){ clearTimeout(saveT); saveT=setTimeout(()=>{
   try{ localStorage.setItem(LS,JSON.stringify(S)); }
   catch(e){ toast("Не удалось сохранить — хранилище переполнено"); }
+  scheduleManifest();               // копия настроек — в папку с медиа, если она подключена
 },140); }
 
 function club(name){
@@ -3194,7 +3279,7 @@ async function audioDuration(key){
 }
 async function attachCheer(c,file){
   if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
-  const key=await saveFile(file);
+  const key=await saveFile(file,"крики трибун · "+c.name);
   if(c.cheerKey){ await idbDel(c.cheerKey); forget(c.cheerKey); }
   c.cheerKey=key; c.cheerName=file.name;
   c.cheerDur=c.cheerDur||10; c.cheerTrim=c.cheerTrim||10;
@@ -3204,7 +3289,7 @@ async function attachCheer(c,file){
 }
 async function attachWhistle(file){
   if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
-  const key=await saveFile(file);
+  const key=await saveFile(file,"свисток судьи");
   if(S.shared.whistleKey){ await idbDel(S.shared.whistleKey); forget(S.shared.whistleKey); }
   S.shared.whistleKey=key; S.shared.whistleName=file.name;
   S.shared.whistleDur=S.shared.whistleDur||2; S.shared.whistleTrim=0;
@@ -3214,7 +3299,7 @@ async function attachWhistle(file){
 }
 async function attachTrans(file){
   if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
-  const key=await saveFile(file);
+  const key=await saveFile(file,"переход после песни");
   if(S.shared.transKey){ await idbDel(S.shared.transKey); forget(S.shared.transKey); }
   S.shared.transKey=key; S.shared.transName=file.name;
   S.shared.transDur=S.shared.transDur||6; S.shared.transTrim=S.shared.transTrim||6;
@@ -3225,7 +3310,7 @@ async function attachTrans(file){
 async function attachWarn(k,file){
   if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
   const cf=warnCfg(k);
-  const key=await saveFile(file);
+  const key=await saveFile(file,"предупреждение · "+k);
   if(cf.key){ await idbDel(cf.key); forget(cf.key); }
   cf.key=key; cf.name=file.name; cf.dur=cf.dur||8; cf.trim=cf.trim||8;
   save(); await renderAudio();
@@ -3239,7 +3324,8 @@ async function attachSiren(target,file,kind){
   if(!/^audio\//.test(file.type)&&!/\.(mp3|wav|ogg|m4a)$/i.test(file.name)){ toast("Нужен аудиофайл"); return; }
   const K=kind==="warn"?"warnKey":"sirenKey", N=kind==="warn"?"warnName":"sirenName",
         D=kind==="warn"?"warnDur":"sirenDur", T=kind==="warn"?"warnTrim":"sirenTrim";
-  const key=await saveFile(file);
+  const key=await saveFile(file,kind==="warn"?"предупреждение о конце периода"
+    :(target===S.shared?"общая сирена периодов":"сирена · "+(target.name||"")));
   if(target[K]){ await idbDel(target[K]); forget(target[K]); }
   target[K]=key; target[N]=file.name; target[D]=target[D]||8; target[T]=target[T]||8;
   save(); await renderAudio();
@@ -3269,7 +3355,7 @@ document.addEventListener("click",async e=>{
       const f=await pickFile("image/*"); if(!f) break;
       const c=club(setupTeams[side]);
       if(c.logoKey){ await idbDel(c.logoKey); forget(c.logoKey); }
-      c.logoKey=await saveFile(f); save(); await renderTeamSetup(side); break; }
+      c.logoKey=await saveFile(f,"логотип · "+c.name); save(); await renderTeamSetup(side); break; }
     case "periods": S.cfg.periods=+el.dataset.n; save(); renderTimerCfg(); break;
     case "addPlayer": openPlayer(side,null); break;
     case "editPlayer": openPlayer(side,el.dataset.id); break;
@@ -3382,7 +3468,7 @@ document.addEventListener("click",async e=>{
       preview(c.cheerKey,null,c.cheerTrim); break; }
     case "upRout": {
       const f=await pickFile("audio/*"); if(!f) break;
-      const key=await saveFile(f);
+      const key=await saveFile(f,"трек на разгром «"+f.name.replace(/\.[a-z0-9]+$/i,"")+"»");
       if(S.shared.rout&&S.shared.rout.fileKey){ await idbDel(S.shared.rout.fileKey); forget(S.shared.rout.fileKey); }
       S.shared.rout={id:"rout",title:f.name.replace(/\.[a-z0-9]+$/i,""),tc:0,fileKey:key,dur:0};
       save(); await renderAudio();
@@ -3400,7 +3486,7 @@ document.addEventListener("click",async e=>{
     case "upCrowd": {
       const f=await pickFile("audio/*"); if(!f) break;
       if(S.shared.crowdKey){ await idbDel(S.shared.crowdKey); forget(S.shared.crowdKey); }
-      S.shared.crowdKey=await saveFile(f); S.shared.crowdName=f.name;
+      S.shared.crowdKey=await saveFile(f,"шум трибун"); S.shared.crowdName=f.name;
       crowdBuf=null; crowdBufKey=null;
       save(); await renderAudio(); break; }
     case "delCrowd": {
@@ -3427,7 +3513,7 @@ document.addEventListener("click",async e=>{
       const okd=await grantMediaDir();
       toast(okd?`Папка «${S.mediaDirName||""}» подключена`:"Браузер не дал доступ к папке");
       await checkLosses(); renderMediaDir();
-      if($("screen-setup").classList.contains("active")){ await renderAudio(); renderHealth(); }
+      if($("screen-setup").classList.contains("active")) await renderSetup();
       break; }
     case "dirPick": {
       if(await pickMediaDir()){
@@ -3436,6 +3522,19 @@ document.addEventListener("click",async e=>{
       }
       break; }
     case "dirMigrate": await migrateToDir(); renderMediaDir(); await checkLosses(); renderHealth(); break;
+    case "dirLoadManifest": {
+      if(await loadFromManifest(true)){
+        toast("Проект загружен из папки"); await checkLosses();
+        if($("screen-setup").classList.contains("active")) await renderSetup(); else renderMediaDir();
+      }
+      break; }
+    case "dirSaveManifest": {
+      if(!confirm("Записать в папку текущий проект этого браузера?\n\n"+
+                  "Сохранённый там раньше проект будет заменён. Медиафайлы в папке не удаляются.")) break;
+      const okm=await writeManifest(true);
+      if(okm){ manifestSeen.mine=true; toast("Проект записан в папку"); }
+      else toast("Записать в папку не удалось");
+      renderMediaDir(); break; }
     case "lossDetails": {
       await openSetup();
       const h=$("healthPanel");
@@ -3485,7 +3584,7 @@ document.addEventListener("click",async e=>{
     case "wAdd": {
       const f=await pickFile("audio/*"); if(!f) break;
       S.warmup.playlist=S.warmup.playlist||[];
-      const wk=await saveFile(f);
+      const wk=await saveFile(f,"разминка · «"+f.name.replace(/\.[a-z0-9]+$/i,"")+"»");
       const tr={id:uid(),title:f.name.replace(/\.[a-z0-9]+$/i,""),tc:0,end:0,dur:0,fileKey:wk};
       S.warmup.playlist.push(tr);
       measureLoudness(wk).then(r=>{ if(!r) return;
@@ -3518,7 +3617,7 @@ document.addEventListener("click",async e=>{
     case "trkAdd": {
       const f=await pickFile("audio/*"); if(!f) break;
       const c=club(setupTeams[side]); c.playlist=c.playlist||[];
-      const tk=await saveFile(f);
+      const tk=await saveFile(f,"трек «"+f.name.replace(/\.[a-z0-9]+$/i,"")+"» · "+c.name);
       const nt={id:uid(),title:f.name.replace(/\.[a-z0-9]+$/i,""),tc:0,fileKey:tk};
       c.playlist.push(nt);
       save(); await renderAudio();
@@ -3828,6 +3927,7 @@ $("aWarm").addEventListener("ended",()=>{ if(warmOn) warmupNext(); });
 (async function init(){
   setupTouch();
   await loadMediaDir();             // папка с медиа — до любой проверки файлов
+  if(dirReady()) await adoptFolder();
   await importBootstrap();          // если файл прислали с вшитым проектом — разбираем его
   renderIncoming();                 // подсказка, если присланное ждёт решения оператора
   await checkLosses();              // медиа могло не дожить до этого запуска
@@ -4339,14 +4439,29 @@ function renderMediaDir(){
            <button class="btn sm" data-act="dirPick">Выбрать другую…</button>`);
     return;
   }
-  el.innerHTML=head("подключена","ok")+
+  /* в папке чужой проект: решает оператор, само ничего не перезаписывается */
+  const foreign=manifestSeen&&manifestSeen.mine===false;
+  const when=foreign&&manifestSeen.savedAt?new Date(manifestSeen.savedAt).toLocaleString("ru-RU",
+    {day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"}):"";
+  const conflict=foreign?`
+    <div style="border:1px solid rgba(255,197,49,.4);background:rgba(255,197,49,.06);border-radius:10px;
+      padding:14px 16px;margin-bottom:14px">
+      <div class="mono" style="font-size:11px;line-height:1.7;color:var(--soft);text-transform:none;letter-spacing:0;margin-bottom:12px">
+        <b>В этой папке сохранён другой проект</b> — ${manifestSeen.teams} ${manifestSeen.teams===1?"команда":"команд"}${when?`, от ${when}`:""}.
+        Пока ты не выберешь, файл проекта в папке не перезаписывается.</div>
+      ${row(`<button class="btn primary xs" data-act="dirLoadManifest">Загрузить проект из папки</button>
+             <button class="btn xs" data-act="dirSaveManifest">Записать в папку мой проект</button>`)}
+    </div>`:"";
+  el.innerHTML=head("подключена","ok")+conflict+
     note(`Папка <b style="color:var(--soft)">«${name}»</b>. В ней: <b style="color:var(--soft)">${inDir}</b>`+
       ` из ${all.length} медиафайлов проекта.`+
       (inBrowser?` Ещё <b style="color:var(--gold)">${inBrowser}</b> лежат в браузере и могут пропасть — перенеси их.`
-                :" Всё лежит на диске — браузеру вычищать нечего.")+
-      "<br>Новые сирены, треки и фото сразу ложатся в папку. Внутри файлы разложены по разделам — "+
-      "Музыка, Сирены, Звуки, Фото — их можно открыть и послушать обычным плеером.")+
+                :all.length?" Всё лежит на диске — браузеру вычищать нечего.":"")+
+      "<br>Новые сирены, треки и фото сразу ложатся в папку, разложенные по разделам — "+
+      "Музыка, Сирены, Звуки, Фото. Рядом лежит «"+esc(MANIFEST)+"» с командами, составами и плейлистами: "+
+      "папку можно открыть в любом браузере, и подтянется всё.")+
     row((inBrowser?`<button class="btn primary sm" data-act="dirMigrate">Перенести ${inBrowser} в папку</button>`:"")+
+        `<button class="btn ${inBrowser||all.length?"":"primary "}sm" data-act="importProjectFile">Распаковать проект из файла…</button>`+
         `<button class="btn sm" data-act="dirPick">Сменить папку…</button>`);
 }
 
