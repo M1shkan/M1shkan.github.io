@@ -184,6 +184,46 @@ button{cursor:pointer}
 .loss-bar.lock .loss-x{color:#FFEBB0}
 body.has-loss{padding-top:46px}
 .eq-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px 22px}
+/* ── архив матчей ── */
+.arc-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding:22px clamp(16px,4vw,64px);border-bottom:1px solid var(--line-3)}
+.arc-tabs{display:flex;gap:4px;padding:18px clamp(16px,4vw,64px) 0;border-bottom:1px solid var(--line-3)}
+.arc-tab{font:500 13px var(--ui);color:var(--muted);background:none;border:none;cursor:pointer;
+  padding:10px 16px 12px;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .15s}
+.arc-tab:hover{color:var(--soft)}
+.arc-tab.on{color:var(--light);border-bottom-color:var(--gold)}
+.arc-body{padding:22px clamp(16px,4vw,64px) 60px;display:flex;flex-direction:column;gap:10px}
+.arc-empty{display:flex;flex-direction:column;gap:12px;align-items:flex-start;padding:40px 0}
+.arc-row{display:grid;grid-template-columns:150px 1fr auto;grid-template-areas:"date match acts" "date sub acts";
+  gap:4px 20px;align-items:center;padding:14px 18px;border:1px solid var(--line);border-radius:12px;
+  background:var(--board-deep);transition:border-color .15s}
+.arc-row:hover{border-color:var(--line-2)}
+.arc-date{grid-area:date;font-size:11px;color:var(--muted);text-transform:none;letter-spacing:0;line-height:1.5}
+.arc-match{grid-area:match;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.arc-t{display:flex;align-items:center;gap:8px;font:600 17px/1.1 var(--disp);text-transform:uppercase;letter-spacing:.02em}
+.arc-t i{width:8px;height:22px;border-radius:2px;display:inline-block;flex:none}
+.arc-dot{width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:middle;display:inline-block}
+.arc-score{font:700 26px/1 var(--disp);color:var(--light);white-space:nowrap}
+.arc-score small{font:500 9px var(--mono);color:var(--gold);letter-spacing:.12em;margin-left:6px;vertical-align:middle}
+.arc-sub{grid-area:sub;font-size:11px;color:var(--muted-2);text-transform:none;letter-spacing:0;line-height:1.5}
+.arc-acts{grid-area:acts;display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.arc-filter{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:6px}
+.arc-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+.arc-table{width:100%;border-collapse:collapse;font:400 13px var(--ui);min-width:620px}
+.arc-table th{font:500 10px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
+  text-align:left;padding:12px;border-bottom:1px solid var(--line);background:var(--board-2);white-space:nowrap}
+.arc-table th[data-act]{cursor:pointer}
+.arc-table th[data-act]:hover,.arc-table th.on{color:var(--gold)}
+.arc-table td{padding:10px 12px;border-bottom:1px solid var(--line-3);color:var(--soft)}
+.arc-table tr:last-child td{border-bottom:none}
+.arc-table .n{text-align:center;width:1%;white-space:nowrap}
+.arc-table tr:hover td{background:rgba(255,255,255,.015)}
+.arc-note{font-size:10px;color:var(--muted-2);text-transform:none;letter-spacing:0;line-height:1.7;margin-top:6px}
+@media (max-width:720px){
+  .arc-row{grid-template-columns:1fr;grid-template-areas:"date" "match" "sub" "acts"}
+  .arc-acts{justify-content:flex-start}
+}
+
 .eq-grid .fld{padding:13px 14px;border:1px solid var(--line);border-radius:10px;background:var(--board-3)}
 .eq-grid .fld:has(input:not([disabled])):hover{border-color:var(--line-2)}
 .drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:28px 16px;
@@ -520,6 +560,7 @@ body.has-loss{padding-top:46px}
     <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
       <button class="btn primary" id="btnGoSetup" style="font-size:22px;padding:22px 44px">Настроить матч</button>
       <button class="btn" id="btnResume" style="font-size:22px;padding:21px 34px">Продолжить матч</button>
+      <button class="btn" id="btnArchive" data-act="arcScreen" style="font-size:16px;padding:18px 24px">Архив матчей</button>
       <button class="btn hidden" id="btnInstall" style="font-size:16px;padding:18px 24px">Установить на телефон</button>
     </div>
     <div class="hidden" id="wIncoming" style="border:1px solid var(--b-line);background:var(--b-soft);
@@ -751,8 +792,29 @@ body.has-loss{padding-top:46px}
     <span class="disp" id="mvpName" style="font-size:20px;color:var(--gold);flex:none">★ —</span>
     <span class="mono" style="font-size:13px;line-height:1.5;color:var(--muted-3);flex:1;min-width:240px;
       text-transform:none;letter-spacing:0">Статус MVP и статистика матча (голы, пасы) уходят в общую статистику игрока и сохраняются между матчами. Корону можно переназначить до закрытия матча.</span>
+    <button class="btn" data-act="sumProto">Протокол матча</button>
     <button class="btn gold" id="btnCloseMatch">Закрыть матч</button>
   </div>
+</section>
+
+<!-- ================= АРХИВ МАТЧЕЙ ================= -->
+<section class="screen" id="screen-archive">
+  <div class="arc-top">
+    <button class="btn xs" data-act="arcBack">← Назад</button>
+    <span class="disp" style="font-size:26px">Архив матчей</span>
+    <span class="badge dim" id="arcCount">—</span>
+    <span class="sec-line"></span>
+    <button class="btn xs" data-act="arcAll">Все протоколы</button>
+    <button class="btn xs hidden" id="arcDirBtn" data-act="arcDir">Протоколы в папку</button>
+    <button class="btn xs" data-act="arcCsvP">Игроки → Excel</button>
+    <button class="btn xs" data-act="arcCsvM">Матчи → Excel</button>
+  </div>
+  <div class="arc-tabs">
+    <button class="arc-tab" data-act="arcTab" data-arc-tab="matches">Матчи</button>
+    <button class="arc-tab" data-act="arcTab" data-arc-tab="players">Игроки</button>
+    <button class="arc-tab" data-act="arcTab" data-arc-tab="teams">Команды</button>
+  </div>
+  <div class="arc-body" id="arcBody"></div>
 </section>
 
 <!-- модалки -->
@@ -1229,6 +1291,7 @@ function defState(){
                      gate:-50,comp:8,makeup:1.15}},
     cfg:{periodLen:1200,periods:3,otOn:false,otLen:300,interLen:180},
     match:null,
+    matches:[],                    // архив закрытых матчей — источник протоколов и статистики
     lastScreen:"welcome"
   };
 }
@@ -1990,7 +2053,7 @@ function newMatch(a,b){
     phase: S.warmup.on ? "warmup" : "period",
     period:1, isOT:false, remaining:S.cfg.periodLen, running:false,
     started:false, warned:false,
-    score:{A:0,B:0}, goals:[], periodScores:[], over:false, mvp:null,
+    score:{A:0,B:0}, goals:[], periodScores:[], over:false, mvp:null, startedAt:Date.now(),
     thirdPlayed:{A:false,B:false}, crowdOn:false, timeUp:false };
 }
 function phaseLen(){
@@ -2236,6 +2299,10 @@ function matchStats(){
 }
 function closeMatch(){
   const m=M();
+  /* матч — в архив целиком, до того как он исчезнет из состояния */
+  let rec=null;
+  try{ rec=buildMatchRecord(m); matchArchive().push(rec); }
+  catch(e){ console.warn("Матч не попал в архив",e); }
   matchStats().forEach(e=>{
     const c=club(m.teams[e.side]); const p=(c.players||[]).find(x=>x.id===e.p.id);
     if(!p) return;
@@ -2243,7 +2310,12 @@ function closeMatch(){
     if(m.mvp===e.key) p.seasonMvp=(p.seasonMvp||0)+1;
   });
   S.match=null; save(); stopAudio(); stopWarmup(); stopCrowd(); resetCooldown(); micGoOff(); keepAwake(false);
-  show("welcome"); toast("Матч закрыт, статистика записана в составы");
+  show("welcome");
+  if(rec&&dirReady()){
+    saveProtocolToDir(rec).then(okp=>toast(okp?"Матч закрыт: в архиве, протокол — в папке «Протоколы»"
+                                             :"Матч закрыт и сохранён в архив"));
+  }else toast(rec?"Матч закрыт и сохранён в архив":"Матч закрыт, статистика записана в составы");
+  renderArchiveBtn();
 }
 
 /* ═══════════ НАВИГАЦИЯ ═══════════ */
@@ -2251,7 +2323,7 @@ function show(name){
   /* проверка звука крутится в плеере разминки — уходя с настройки, глушим её,
      иначе она столкнётся с настоящим плейлистом матча */
   if(name!=="setup"&&eqTestT) eqTestStop();
-  ["welcome","setup","match","summary"].forEach(n=>$("screen-"+n).classList.toggle("active",n===name));
+  ["welcome","setup","match","summary","archive"].forEach(n=>$("screen-"+n).classList.toggle("active",n===name));
   S.lastScreen=name; save(); window.scrollTo(0,0);
 }
 /* ═══════════ РЕНДЕР · ЭКРАН 2 ═══════════ */
@@ -3508,6 +3580,40 @@ document.addEventListener("click",async e=>{
       Object.assign(eqCfg(),p.v); eqCfg().on=true;
       save(); applyEqLive(); renderEq(); toast("Настройка: "+p.label); break; }
     case "eqTest": await eqTest(); break;
+    /* ── архив ── */
+    case "arcScreen": await openArchive(); break;
+    case "arcBack": {
+      if(arcFrom==="setup") await openSetup();
+      else if(arcFrom==="summary"&&M()){ show("summary"); await renderSummary(); }
+      else if(arcFrom==="match"&&M()){ show("match"); await renderMatch(); }
+      else show("welcome");
+      break; }
+    case "arcTab": arcTab=el.dataset.arcTab||"matches"; renderArchive(); break;
+    case "arcSort": arcSort[el.dataset.tab]=el.dataset.k; renderArchive(); break;
+    case "arcTeam": arcTeam=el.dataset.team||""; renderArchive(); break;
+    case "arcOpen": { const r=matchArchive().find(x=>x.id===el.dataset.id); if(r) openProtocol(r); break; }
+    case "arcDown": { const r=matchArchive().find(x=>x.id===el.dataset.id);
+      if(r) downloadBlob(new Blob([protocolHTML(r)],{type:"text/html"}),protocolFileName(r)); break; }
+    case "arcDel": {
+      const i=matchArchive().findIndex(x=>x.id===el.dataset.id); if(i<0) break;
+      const r=matchArchive()[i];
+      if(!confirm(`Удалить из архива матч ${r.teams.A.name} — ${r.teams.B.name} ${r.score.A}:${r.score.B}?\n\n`+
+        "Он пропадёт из протоколов и сводной статистики. Голы и пасы в карточках игроков останутся — "+
+        "они были записаны при закрытии матча.")) break;
+      matchArchive().splice(i,1); save(); renderArchive(); renderArchiveBtn(); toast("Матч удалён из архива"); break; }
+    case "arcAll": {
+      const list=matchArchive().slice().sort((x,y)=>x.startedAt-y.startedAt);
+      if(!list.length){ toast("В архиве пока нет матчей"); break; }
+      openProtocol(list); break; }
+    case "arcDir": {
+      const list=matchArchive(); let n=0;
+      busy(`Протоколы в папку: 0 из ${list.length}`);
+      for(const r of list){ if(await saveProtocolToDir(r)) n++; $("busyText").textContent=`Протоколы в папку: ${n} из ${list.length}`; }
+      busyDone();
+      toast(n===list.length?`Протоколов в папке «Протоколы»: ${n}`:`Записано ${n} из ${list.length}`); break; }
+    case "arcCsvP": exportPlayersCSV(); break;
+    case "arcCsvM": exportMatchesCSV(); break;
+    case "sumProto": { const m=M(); if(m) openProtocol(buildMatchRecord(m)); break; }
     case "lossHide": lossHidden=true; await checkLosses(); break;
     case "dirGrant": {
       const okd=await grantMediaDir();
@@ -3930,6 +4036,7 @@ $("aWarm").addEventListener("ended",()=>{ if(warmOn) warmupNext(); });
   if(dirReady()) await adoptFolder();
   await importBootstrap();          // если файл прислали с вшитым проектом — разбираем его
   renderIncoming();                 // подсказка, если присланное ждёт решения оператора
+  renderArchiveBtn();
   await checkLosses();              // медиа могло не дожить до этого запуска
   try{ DEF_SIREN=await synth("siren"); DEF_BUZZ=await synth("buzz");
        DEF_WHISTLE=await synth("whistle"); }
@@ -4176,7 +4283,7 @@ function stateIsBlank(st){
   const sh=st.shared||{};
   const shFilled=sh.sirenKey||sh.crowdKey||sh.transKey||sh.whistleKey||(sh.rout&&sh.rout.fileKey)||
     Object.values(sh.warns||{}).some(w=>w&&w.key);
-  return !filled && !shFilled && !((st.warmup||{}).playlist||[]).length;
+  return !filled && !shFilled && !((st.warmup||{}).playlist||[]).length && !(st.matches||[]).length;
 }
 
 /* кладём в IndexedDB всё, чего там нет: ключи уникальные, чужому не мешают */
@@ -5854,6 +5961,369 @@ async function resetAllStats(){
   save();
   await renderRoster("A"); await renderRoster("B");
   toast(n?`Статистика обнулена у ${n} игроков во всех командах`:"Статистика уже была пустой");
+}
+
+
+/* ═══════════ АРХИВ МАТЧЕЙ И ПРОТОКОЛЫ ═══════════
+   Раньше при закрытии матча голы и пасы просто прибавлялись к суммам
+   игроков, а сам матч исчезал бесследно. Теперь каждый закрытый матч
+   ложится в архив целиком: составы на момент игры, все шайбы со временем
+   и передачами, тренеры, MVP. Из архива собираются протоколы и сводная
+   статистика — по игрокам, командам и матчам.
+
+   Архив — это текст, он живёт в настройках проекта: в браузере и в файле
+   проекта в папке с медиа. Протоколы ещё и кладутся в папку отдельными
+   страницами, которые можно открыть без операторской и распечатать. */
+
+function matchArchive(){ if(!Array.isArray(S.matches)) S.matches=[]; return S.matches; }
+
+function buildMatchRecord(m){
+  const side=s=>{
+    const c=club(m.teams[s]), co=c.coach;
+    return {name:c.name,color:c.color,
+      coach:co?[co.last,co.first].filter(Boolean).join(" "):"",
+      coachRole:(co&&co.role)||"",
+      roster:(c.players||[]).map(p=>({id:p.id,num:p.num,last:p.last||"",first:p.first||"",pos:p.pos||""}))};
+  };
+  let a=0,b=0;
+  const goals=(m.goals||[]).map(g=>{
+    if(g.side==="A") a++; else b++;
+    return {t:g.t||0,period:g.period,side:g.side,author:g.author||null,
+            assists:(g.assists||[]).slice(),score:[a,b]};
+  });
+  let mvp=null;
+  if(m.mvp){ const i=m.mvp.indexOf(":"); mvp={side:m.mvp.slice(0,i),id:m.mvp.slice(i+1)}; }
+  return {id:uid(),startedAt:m.startedAt||Date.now(),closedAt:Date.now(),
+    teams:{A:side("A"),B:side("B")},score:{A:m.score.A,B:m.score.B},
+    ot:!!m.isOT||goals.some(g=>g.period==="ОТ"),
+    cfg:{periods:m.cfg.periods,periodLen:m.cfg.periodLen,otLen:m.cfg.otLen},
+    goals,mvp};
+}
+
+/* ── справочные функции по записи ── */
+function recPlayer(rec,side,id){ return (rec.teams[side].roster||[]).find(p=>p.id===id)||null; }
+function recName(p,short){
+  if(!p) return "—";
+  return short?`${p.last} ${(p.first||"")[0]?(p.first[0]+"."):""}`.trim():[p.last,p.first].filter(Boolean).join(" ");
+}
+function recPeriods(rec){
+  const n=rec.cfg&&rec.cfg.periods||3;
+  const cols=[]; for(let i=1;i<=n;i++) cols.push(String(i));
+  if(rec.ot) cols.push("ОТ");
+  const by={A:{},B:{}};
+  cols.forEach(c=>{ by.A[c]=0; by.B[c]=0; });
+  (rec.goals||[]).forEach(g=>{ const c=String(g.period); if(c in by[g.side]) by[g.side][c]++; });
+  return {cols,by};
+}
+function recStats(rec){
+  const map={};
+  const get=(side,id)=>{ const k=side+":"+id; if(!map[k]) map[k]={side,id,g:0,a:0}; return map[k]; };
+  (rec.goals||[]).forEach(g=>{
+    if(g.author) get(g.side,g.author).g++;
+    (g.assists||[]).forEach(id=>get(g.side,id).a++);
+  });
+  return map;
+}
+function recDate(ts,withTime){
+  const d=new Date(ts);
+  const o={day:"numeric",month:"long",year:"numeric"};
+  if(withTime){ o.hour="2-digit"; o.minute="2-digit"; }
+  return d.toLocaleString("ru-RU",o).replace(" г.","");
+}
+function recResult(rec,side){
+  const me=rec.score[side], them=rec.score[side==="A"?"B":"A"];
+  return me>them?"В":me<them?"П":"Н";
+}
+
+/* ── протокол: самостоятельная страница для печати и PDF ── */
+const PROTO_CSS=`
+@page{size:A4;margin:14mm 13mm}
+*{box-sizing:border-box}
+body{margin:0;font:13px/1.45 "Golos Text",system-ui,sans-serif;color:#10151c;background:#e9ecef}
+.page{background:#fff;max-width:860px;margin:24px auto;padding:34px 38px 30px;box-shadow:0 10px 40px -20px rgba(0,0,0,.35)}
+.top{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #10151c;padding-bottom:10px}
+.top h1{font:600 22px/1 Oswald,sans-serif;letter-spacing:.06em;text-transform:uppercase;margin:0}
+.top .src{font:500 10px/1 "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#6b7684}
+.meta{font:500 11px/1.6 "JetBrains Mono",monospace;color:#4b5563;margin:10px 0 18px}
+.score{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:18px;margin:6px 0 20px}
+.team{display:flex;align-items:center;gap:12px}
+.team.b{flex-direction:row-reverse;text-align:right}
+.mark{width:14px;height:42px;border-radius:3px;flex:none}
+.tname{font:600 22px/1.1 Oswald,sans-serif;text-transform:uppercase;letter-spacing:.02em}
+.tcoach{font-size:11px;color:#6b7684;margin-top:3px}
+.big{font:700 52px/1 Oswald,sans-serif;letter-spacing:.02em;text-align:center;white-space:nowrap}
+.big small{display:block;font:500 11px/1 "JetBrains Mono",monospace;letter-spacing:.14em;color:#b45309;margin-top:6px}
+h2{font:600 13px/1 Oswald,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:22px 0 8px;
+  padding-bottom:6px;border-bottom:1px solid #cfd5dc}
+table{width:100%;border-collapse:collapse}
+th{font:500 9.5px/1 "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#6b7684;
+  text-align:left;padding:7px 8px;border-bottom:1px solid #cfd5dc}
+td{padding:6px 8px;border-bottom:1px solid #eef1f4;vertical-align:top}
+td.n,th.n{text-align:center;width:1%;white-space:nowrap}
+td.mono{font:500 12px "JetBrains Mono",monospace;white-space:nowrap}
+tr.tot td{font-weight:600;border-top:1px solid #cfd5dc}
+.empty{color:#9aa3ad;font-style:italic}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.cols h3{font:600 13px/1.2 Oswald,sans-serif;text-transform:uppercase;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+.cols h3 i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.mvp{margin-top:18px;padding:10px 14px;border:1px solid #f0c24b;background:#fff8e1;border-radius:6px}
+.sign{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:34px;font-size:11px;color:#4b5563}
+.sign div{border-top:1px solid #10151c;padding-top:5px}
+.foot{margin-top:18px;font:500 9px/1 "JetBrains Mono",monospace;color:#9aa3ad;letter-spacing:.1em;text-transform:uppercase}
+@media print{body{background:#fff}.page{box-shadow:none;margin:0;max-width:none;padding:0;page-break-after:always}
+  .page:last-child{page-break-after:auto}.noprint{display:none}}
+.noprint{max-width:860px;margin:18px auto 0;display:flex;gap:10px;justify-content:flex-end}
+.noprint button{font:500 12px "Golos Text",sans-serif;padding:9px 16px;border-radius:7px;border:1px solid #10151c;
+  background:#10151c;color:#fff;cursor:pointer}`;
+
+function protocolPage(rec){
+  const A=rec.teams.A, B=rec.teams.B, st=recStats(rec), {cols,by}=recPeriods(rec);
+  const plen=rec.cfg?mmss(rec.cfg.periodLen):"";
+  const goalRows=(rec.goals||[]).map((g,i)=>{
+    const t=rec.teams[g.side];
+    const au=g.author?recName(recPlayer(rec,g.side,g.author)):"";
+    const as=(g.assists||[]).map(id=>recName(recPlayer(rec,g.side,id),true)).join(", ");
+    return `<tr><td class="n">${i+1}</td><td class="mono">${mmss(g.t)}</td><td class="n">${esc(g.period)}</td>
+      <td class="mono">${g.score[0]}:${g.score[1]}</td><td>${esc(t.name)}</td>
+      <td>${au?esc(au):`<span class="empty">не указан</span>`}</td><td>${as?esc(as):"—"}</td></tr>`;
+  }).join("")||`<tr><td colspan="7" class="empty">Шайб в матче не было</td></tr>`;
+  const roster=(side)=>{
+    const t=rec.teams[side];
+    const rows=(t.roster||[]).slice().sort((x,y)=>(+x.num||999)-(+y.num||999)).map(p=>{
+      const s=st[side+":"+p.id]||{g:0,a:0};
+      const star=rec.mvp&&rec.mvp.side===side&&rec.mvp.id===p.id?" ★":"";
+      return `<tr><td class="n">${esc(p.num==null?"":p.num)}</td><td>${esc(recName(p))}${star}</td>
+        <td style="color:#6b7684;font-size:11px">${esc(p.pos||"")}</td>
+        <td class="n">${s.g||""}</td><td class="n">${s.a||""}</td><td class="n"><b>${(s.g+s.a)||""}</b></td></tr>`;
+    }).join("")||`<tr><td colspan="6" class="empty">Состав не заполнен</td></tr>`;
+    return `<div><h3><i style="background:${esc(t.color||"#999")}"></i>${esc(t.name)}</h3>
+      <table><tr><th class="n">№</th><th>Игрок</th><th>Амплуа</th><th class="n">Г</th><th class="n">П</th><th class="n">О</th></tr>${rows}</table>
+      ${t.coach?`<div class="tcoach" style="margin-top:8px">${esc(t.coachRole||"Тренер")}: <b style="color:#10151c">${esc(t.coach)}</b></div>`:""}</div>`;
+  };
+  const mvpP=rec.mvp?recPlayer(rec,rec.mvp.side,rec.mvp.id):null;
+  return `<section class="page">
+  <div class="top"><h1>Протокол матча</h1><span class="src">Операторская 3.0</span></div>
+  <div class="meta">${esc(recDate(rec.startedAt,true))}${rec.cfg?` · ${rec.cfg.periods} ${rec.cfg.periods===1?"период":"периода"} по ${plen}`:""}</div>
+  <div class="score">
+    <div class="team"><span class="mark" style="background:${esc(A.color||"#999")}"></span>
+      <div><div class="tname">${esc(A.name)}</div><div class="tcoach">хозяева</div></div></div>
+    <div class="big">${rec.score.A} : ${rec.score.B}${rec.ot?"<small>Овертайм</small>":""}</div>
+    <div class="team b"><span class="mark" style="background:${esc(B.color||"#999")}"></span>
+      <div><div class="tname">${esc(B.name)}</div><div class="tcoach">гости</div></div></div>
+  </div>
+  <h2>Счёт по периодам</h2>
+  <table><tr><th>Команда</th>${cols.map(c=>`<th class="n">${esc(c)}</th>`).join("")}<th class="n">Итог</th></tr>
+    <tr><td>${esc(A.name)}</td>${cols.map(c=>`<td class="n">${by.A[c]}</td>`).join("")}<td class="n"><b>${rec.score.A}</b></td></tr>
+    <tr><td>${esc(B.name)}</td>${cols.map(c=>`<td class="n">${by.B[c]}</td>`).join("")}<td class="n"><b>${rec.score.B}</b></td></tr></table>
+  <h2>Взятие ворот</h2>
+  <table><tr><th class="n">№</th><th>Время</th><th class="n">Пер.</th><th>Счёт</th><th>Команда</th><th>Автор</th><th>Передачи</th></tr>${goalRows}</table>
+  <h2>Составы</h2>
+  <div class="cols">${roster("A")}${roster("B")}</div>
+  ${mvpP?`<div class="mvp">★ Лучший игрок матча — <b>${esc(recName(mvpP))}</b>${mvpP.num!=null&&mvpP.num!==""?` (№${esc(mvpP.num)})`:""}, ${esc(rec.teams[rec.mvp.side].name)}</div>`:""}
+  <div class="sign"><div>Оператор</div><div>Главный судья</div></div>
+  <div class="foot">Сформировано ${esc(recDate(rec.closedAt||Date.now(),true))}</div>
+</section>`;
+}
+function protocolHTML(recs,title){
+  const list=Array.isArray(recs)?recs:[recs];
+  const t=title||(list.length===1?`Протокол · ${list[0].teams.A.name} — ${list[0].teams.B.name}`:`Протоколы матчей · ${list.length}`);
+  /* кнопка печати — только ссылкой на print(), без единого тега скрипта:
+     страница рождается внутри инлайн-скрипта, и такой тег сломал бы разбор */
+  return `<!DOCTYPE html><html lang="ru"><head><meta charset="utf-8"><title>${esc(t)}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>${PROTO_CSS}</style></head><body>
+<div class="noprint"><button onclick="print()">Печать / сохранить в PDF</button></div>
+${list.map(protocolPage).join("\n")}
+</body></html>`;
+}
+function protocolFileName(rec){
+  const d=new Date(rec.startedAt), p=n=>String(n).padStart(2,"0");
+  const stamp=`${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}-${p(d.getMinutes())}`;
+  const base=`${stamp} ${rec.teams.A.name} — ${rec.teams.B.name} ${rec.score.A}-${rec.score.B}${rec.ot?" ОТ":""}`;
+  return base.replace(/[\\/:*?"<>|\u0000-\u001f]/g," ").replace(/\s+/g," ").trim()+".html";
+}
+function downloadBlob(blob,name){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),4000);
+}
+function openProtocol(recs){
+  const u=URL.createObjectURL(new Blob([protocolHTML(recs)],{type:"text/html"}));
+  const w=window.open(u,"_blank");
+  if(!w) toast("Браузер заблокировал новую вкладку — разреши всплывающие окна или жми «Скачать»");
+  setTimeout(()=>URL.revokeObjectURL(u),60000);
+}
+/* протокол в папку с медиа: Протоколы/2026-10-29 19-40 СКА — Динамо 3-2.html */
+async function saveProtocolToDir(rec){
+  if(!dirReady()) return false;
+  try{
+    await dirWrite("Протоколы/"+protocolFileName(rec),new Blob([protocolHTML(rec)],{type:"text/html"}));
+    return true;
+  }catch(e){ console.warn("Протокол в папку не записался",e); return false; }
+}
+
+/* ── сводная статистика по архиву ── */
+function archiveStats(){
+  const players={}, teams={};
+  const team=n=>teams[n]||(teams[n]={name:n,color:"",gp:0,w:0,l:0,d:0,otw:0,otl:0,gf:0,ga:0});
+  matchArchive().slice().sort((x,y)=>x.startedAt-y.startedAt).forEach(rec=>{
+    const st=recStats(rec);
+    ["A","B"].forEach(side=>{
+      const t=rec.teams[side], o=side==="A"?"B":"A", tm=team(t.name);
+      tm.color=t.color||tm.color; tm.gp++;
+      tm.gf+=rec.score[side]; tm.ga+=rec.score[o];
+      const r=recResult(rec,side);
+      if(r==="В"){ tm.w++; if(rec.ot) tm.otw++; }
+      else if(r==="П"){ tm.l++; if(rec.ot) tm.otl++; }
+      else tm.d++;
+      (t.roster||[]).forEach(p=>{
+        const k=t.name+"|"+p.id;
+        const e=players[k]||(players[k]={key:k,team:t.name,color:t.color,id:p.id,gp:0,g:0,a:0,mvp:0});
+        /* имя и номер — из последнего матча: человек мог сменить номер */
+        e.num=p.num; e.last=p.last; e.first=p.first; e.pos=p.pos;
+        e.gp++;
+        const s=st[side+":"+p.id]; if(s){ e.g+=s.g; e.a+=s.a; }
+        if(rec.mvp&&rec.mvp.side===side&&rec.mvp.id===p.id) e.mvp++;
+      });
+    });
+  });
+  return {players:Object.values(players),teams:Object.values(teams)};
+}
+
+/* ── выгрузка в таблицы: CSV, который Excel открывает сразу по-русски ── */
+function csv(rows){
+  const cell=v=>{ const s=v==null?"":String(v); return /[;"\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s; };
+  return "﻿"+rows.map(r=>r.map(cell).join(";")).join("\r\n");
+}
+function exportPlayersCSV(){
+  const {players}=archiveStats();
+  if(!players.length){ toast("В архиве пока нет матчей"); return; }
+  const rows=[["Команда","Номер","Фамилия","Имя","Амплуа","Игры","Голы","Передачи","Очки","MVP","Очки за игру"]];
+  players.sort((x,y)=>(y.g+y.a)-(x.g+x.a)||y.g-x.g).forEach(p=>rows.push([
+    p.team,p.num,p.last,p.first,p.pos,p.gp,p.g,p.a,p.g+p.a,p.mvp,
+    p.gp?((p.g+p.a)/p.gp).toFixed(2).replace(".",","):"0"]));
+  downloadBlob(new Blob([csv(rows)],{type:"text/csv"}),`Статистика игроков · ${matchArchive().length} ${plural(matchArchive().length,"матч","матча","матчей")}.csv`);
+}
+function exportMatchesCSV(){
+  const list=matchArchive();
+  if(!list.length){ toast("В архиве пока нет матчей"); return; }
+  const rows=[["Дата","Хозяева","Гости","Счёт","Овертайм","По периодам","Шайбы (время · автор)","Лучший игрок"]];
+  list.slice().sort((x,y)=>x.startedAt-y.startedAt).forEach(rec=>{
+    const {cols,by}=recPeriods(rec);
+    const mvpP=rec.mvp?recPlayer(rec,rec.mvp.side,rec.mvp.id):null;
+    rows.push([recDate(rec.startedAt,true),rec.teams.A.name,rec.teams.B.name,
+      `${rec.score.A}:${rec.score.B}`,rec.ot?"да":"",
+      cols.map(c=>`${by.A[c]}:${by.B[c]}`).join(", "),
+      (rec.goals||[]).map(g=>`${mmss(g.t)} ${rec.teams[g.side].name} — ${recName(recPlayer(rec,g.side,g.author),true)}`).join("; "),
+      mvpP?`${recName(mvpP)} (${rec.teams[rec.mvp.side].name})`:""]);
+  });
+  downloadBlob(new Blob([csv(rows)],{type:"text/csv"}),`Матчи · ${list.length}.csv`);
+}
+
+/* ── экран архива ── */
+let arcTab="matches", arcSort={players:"pts",teams:"pts"}, arcTeam="", arcFrom="welcome";
+async function openArchive(){
+  arcFrom=["setup","summary","match"].find(n=>$("screen-"+n).classList.contains("active"))||"welcome";
+  show("archive"); renderArchive();
+}
+function renderArchive(){
+  const el=$("arcBody"); if(!el) return;
+  const list=matchArchive().slice().sort((x,y)=>y.startedAt-x.startedAt);
+  $("arcCount").textContent=list.length?`${list.length} ${plural(list.length,"матч","матча","матчей")}`:"пусто";
+  document.querySelectorAll("[data-arc-tab]").forEach(b=>b.classList.toggle("on",b.dataset.arcTab===arcTab));
+  $("arcDirBtn").classList.toggle("hidden",!dirReady()||!list.length);
+  if(!list.length){
+    el.innerHTML=`<div class="arc-empty">
+      <span class="disp" style="font-size:22px">Архив пуст</span>
+      <span class="mono" style="font-size:12px;line-height:1.7;color:var(--muted);text-transform:none;letter-spacing:0;max-width:520px">
+        Матч попадает сюда, когда ты нажимаешь «Закрыть матч» на экране сводки — целиком: составы, все шайбы
+        со временем и передачами, счёт по периодам, лучший игрок. По архиву собираются протоколы и статистика.</span></div>`;
+    return;
+  }
+  if(arcTab==="matches") el.innerHTML=list.map(arcMatchRow).join("");
+  else if(arcTab==="players") el.innerHTML=arcPlayersTable();
+  else el.innerHTML=arcTeamsTable();
+}
+function renderArchiveBtn(){
+  const b=$("btnArchive"); if(!b) return;
+  const n=matchArchive().length;
+  b.textContent=n?`Архив матчей · ${n}`:"Архив матчей";
+}
+function plural(n,one,few,many){
+  const m10=n%10, m100=n%100;
+  return m10===1&&m100!==11?one:(m10>=2&&m10<=4&&(m100<10||m100>=20))?few:many;
+}
+function arcMatchRow(rec){
+  const A=rec.teams.A, B=rec.teams.B, n=(rec.goals||[]).length;
+  const mvpP=rec.mvp?recPlayer(rec,rec.mvp.side,rec.mvp.id):null;
+  const scorers=["A","B"].map(s=>{
+    const st=recStats(rec);
+    return Object.values(st).filter(e=>e.side===s&&e.g>0).sort((x,y)=>y.g-x.g)
+      .map(e=>`${recName(recPlayer(rec,s,e.id),true)}${e.g>1?" ×"+e.g:""}`).join(", ");
+  });
+  return `<div class="arc-row">
+    <div class="arc-date mono">${esc(recDate(rec.startedAt))}<br><span style="color:var(--muted-2)">${
+      new Date(rec.startedAt).toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"})}</span></div>
+    <div class="arc-match">
+      <span class="arc-t"><i style="background:${esc(A.color)}"></i>${esc(A.name)}</span>
+      <span class="arc-score">${rec.score.A}:${rec.score.B}${rec.ot?`<small>ОТ</small>`:""}</span>
+      <span class="arc-t b">${esc(B.name)}<i style="background:${esc(B.color)}"></i></span>
+    </div>
+    <div class="arc-sub mono">${n?`${scorers[0]||"—"} · ${scorers[1]||"—"}`:"без шайб"}${mvpP?` · ★ ${esc(recName(mvpP,true))}`:""}</div>
+    <div class="arc-acts">
+      <button class="btn xs" data-act="arcOpen" data-id="${rec.id}">Протокол</button>
+      <button class="btn xs" data-act="arcDown" data-id="${rec.id}">Скачать</button>
+      <button class="btn xs danger" data-act="arcDel" data-id="${rec.id}" title="Удалить из архива">✕</button>
+    </div></div>`;
+}
+function arcSortHead(tab,k,label,cls){
+  const on=arcSort[tab]===k;
+  return `<th class="${cls||""}${on?" on":""}" data-act="arcSort" data-tab="${tab}" data-k="${k}">${label}${on?" ↓":""}</th>`;
+}
+function arcPlayersTable(){
+  const {players}=archiveStats();
+  const teamsList=[...new Set(players.map(p=>p.team))].sort();
+  const list=players.filter(p=>!arcTeam||p.team===arcTeam);
+  const key={pts:p=>p.g+p.a,g:p=>p.g,a:p=>p.a,gp:p=>p.gp,mvp:p=>p.mvp,ppg:p=>p.gp?(p.g+p.a)/p.gp:0}[arcSort.players]||(p=>p.g+p.a);
+  list.sort((x,y)=>key(y)-key(x)||(y.g-x.g)||(x.last||"").localeCompare(y.last||""));
+  return `<div class="arc-filter">
+      <span class="mono" style="font-size:10px;color:var(--muted)">Команда</span>
+      <button class="chip ${arcTeam?"":"on"}" data-act="arcTeam" data-team="">Все</button>
+      ${teamsList.map(t=>`<button class="chip ${arcTeam===t?"on":""}" data-act="arcTeam" data-team="${esc(t)}">${esc(t)}</button>`).join("")}
+    </div>
+    <div class="arc-scroll"><table class="arc-table">
+    <tr><th class="n">#</th><th>Игрок</th><th>Команда</th>
+      ${arcSortHead("players","gp","И","n")}${arcSortHead("players","g","Г","n")}${arcSortHead("players","a","П","n")}
+      ${arcSortHead("players","pts","О","n")}${arcSortHead("players","mvp","MVP","n")}${arcSortHead("players","ppg","О/И","n")}</tr>
+    ${list.map((p,i)=>`<tr><td class="n mono">${i+1}</td>
+      <td><b>${esc(p.last||"")}</b> ${esc(p.first||"")}${p.num!=null&&p.num!==""?` <span class="mono" style="color:var(--muted-2)">№${esc(p.num)}</span>`:""}</td>
+      <td><i class="arc-dot" style="background:${esc(p.color)}"></i>${esc(p.team)}</td>
+      <td class="n mono">${p.gp}</td><td class="n mono">${p.g}</td><td class="n mono">${p.a}</td>
+      <td class="n mono"><b>${p.g+p.a}</b></td><td class="n mono">${p.mvp||""}</td>
+      <td class="n mono">${p.gp?((p.g+p.a)/p.gp).toFixed(2):"—"}</td></tr>`).join("")}
+    </table></div>
+    <div class="arc-note mono">И — сыгранные матчи: игрок считается сыгравшим, если стоял в составе на момент закрытия матча.
+      Считается только по матчам из архива — суммы в карточках игроков включают и более ранние матчи.</div>`;
+}
+function arcTeamsTable(){
+  const {teams}=archiveStats();
+  const key={pts:t=>t.w*2+t.d,gp:t=>t.gp,w:t=>t.w,gf:t=>t.gf,diff:t=>t.gf-t.ga}[arcSort.teams]||(t=>t.w*2+t.d);
+  teams.sort((x,y)=>key(y)-key(x)||((y.gf-y.ga)-(x.gf-x.ga)));
+  return `<div class="arc-scroll"><table class="arc-table">
+    <tr><th class="n">#</th><th>Команда</th>${arcSortHead("teams","gp","И","n")}${arcSortHead("teams","w","В","n")}
+      <th class="n">ВО</th><th class="n">ПО</th><th class="n">П</th><th class="n">Н</th>
+      ${arcSortHead("teams","gf","Ш","n")}${arcSortHead("teams","diff","+/−","n")}${arcSortHead("teams","pts","О","n")}</tr>
+    ${teams.map((t,i)=>`<tr><td class="n mono">${i+1}</td>
+      <td><i class="arc-dot" style="background:${esc(t.color)}"></i><b>${esc(t.name)}</b></td>
+      <td class="n mono">${t.gp}</td><td class="n mono">${t.w}</td><td class="n mono">${t.otw}</td>
+      <td class="n mono">${t.otl}</td><td class="n mono">${t.l}</td><td class="n mono">${t.d||""}</td>
+      <td class="n mono">${t.gf}–${t.ga}</td><td class="n mono">${t.gf-t.ga>0?"+":""}${t.gf-t.ga}</td>
+      <td class="n mono"><b>${t.w*2+t.d}</b></td></tr>`).join("")}
+    </table></div>
+    <div class="arc-note mono">В и П включают победы и поражения в овертайме (они вынесены отдельно в ВО и ПО).
+      Очки: 2 за победу, 1 за ничью.</div>`;
 }
 
 })();
